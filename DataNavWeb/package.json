@@ -1,0 +1,17 @@
+{
+  "name": "datanavweb",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "_comments": "TODO: add git pull for the build-app script",
+  "scripts": {
+    "build-app": "npm run build-client && npm install && npm start",
+    "build-client": "mkdir -p public && cd client && npm run build-app && cd ..",
+    "start": "pm2 start app.js -n Convertible9000 && pm2 monit"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
