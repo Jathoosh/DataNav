@@ -2,6 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key>
+	<string>We use your device&apos;s camera to provide an AR feature
+</string>
+	<key>NSMotionUsageDescription
+NSMotionUsageDescription
+NSMotionUsageDescription
+</key>
+	<string>We use your device&apos;s accelerometer to provide positioning services
+</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
