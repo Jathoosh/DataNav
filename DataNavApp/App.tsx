@@ -1,29 +1,32 @@
-import { useEffect, useState } from 'react';
-import { Text, StyleSheet, View } from 'react-native';
-import { accelerometer } from 'react-native-sensors';
-import { Subscription } from 'rxjs';
+import {useEffect, useState} from 'react';
+import {Text, StyleSheet, View} from 'react-native';
+import {
+  accelerometer,
+  setUpdateIntervalForType,
+  SensorTypes,
+} from 'react-native-sensors';
+import {Subscription} from 'rxjs';
 
+setUpdateIntervalForType(SensorTypes.accelerometer, 100);
 
 function App(): React.JSX.Element {
-  const [accelerometerData, setData] = useState({ x: 0, y: 0, z: 0 });
+  const [accelerometerData, setData] = useState({x: 0, y: 0, z: 0});
 
   useEffect(() => {
     let subscription: Subscription | null = null;
-    
+
     if (accelerometer) {
-      subscription = accelerometer.subscribe(({ x, y, z }) => {
-        setData({ x, y, z });
+      subscription = accelerometer.subscribe(({x, y, z}) => {
+        setData({x, y, z});
       });
     }
-  
+
     return () => {
       if (subscription) {
         subscription.unsubscribe();
       }
     };
   }, [accelerometer]);
-  
-    
 
   return (
     <View>
