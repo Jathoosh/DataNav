@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import {Platform, Text, View} from 'react-native';
+import {Platform} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {setUpdateIntervalForType, SensorTypes} from 'react-native-sensors';
