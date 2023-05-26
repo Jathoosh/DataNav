@@ -14,7 +14,11 @@ const Stack = createNativeStackNavigator();
 function App(): React.JSX.Element{
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator 
+      initialRouteName="Home"
+       screenOptions={{
+        contentStyle: {backgroundColor: 'F0F0F0'},
+       }}>
         <Stack.Screen
           name="Home"
           component={require('./views/HomeScreen').default}
@@ -27,6 +31,10 @@ function App(): React.JSX.Element{
         <Stack.Screen
           name="Maps"
           component={require('./views/MapsInfo').default}
+        />
+        <Stack.Screen
+          name="Login"
+          component={require('./views/Login').default}
         />
       </Stack.Navigator>
     </NavigationContainer>
