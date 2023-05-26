@@ -81,6 +81,13 @@ export default {
 .flexVertical{
   display: flex;
   justify-content: center;
+  position: absolute;
+  margin: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  width: 85%;
+  height: 85%;
 }
 
 .flexHorizontal {
@@ -88,7 +95,7 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 95%;
+    width: 100%;
     height: 100%;
     background-color: #F0F0F0;
 }
