@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TextInput, Image} from 'react-native';
+import {View, Text, StyleSheet, TextInput} from 'react-native';
 import NavigationButton from '../components/NavigationButton';
 
 function Login(navigation: any) {
-  /*To Do :
+  /*TODO:
     - modify binding fields to match the serverInfos and code (backend)
   */
   const [serverInfos, setServerInfos] = useState('');
@@ -21,14 +21,6 @@ function Login(navigation: any) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.logo_Text}>
-        <Image style={styles.logo} source={require('../asset/logo.png')} />
-        <Image
-          style={styles.logo_datanav}
-          source={require('../asset/Datanav_Texte.png')}
-        />
-      </View>
-
       <View style={styles.inputContainer}>
         <Text style={styles.infos}>
           Entrez les informations de votre
@@ -83,20 +75,6 @@ const styles = StyleSheet.create({
     width: '80%',
     marginTop: '30%',
     marginBottom: '20%',
-  },
-  logo_Text: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: '55%',
-    marginBottom: 20,
-  },
-  logo: {
-    width: 57.57,
-    height: 80,
-  },
-  logo_datanav: {
-    width: 115.74,
-    height: 20,
   },
 });
 export default Login;
