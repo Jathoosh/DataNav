@@ -39,6 +39,7 @@ function AcceleratorInfos({navigation}) {
       <Text style={styles.textZ}>Z: {accelerometerData.z.toFixed(2)}</Text>
       <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
       <Button title="Go to Maps" onPress={() => navigation.navigate('Maps')} />
+      <Button title="Go to Login" onPress={() => navigation.navigate('Login')} />
     </View>
   );
 }
