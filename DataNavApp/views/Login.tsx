@@ -1,5 +1,14 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TextInput, Image} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Image,
+  Dimensions,
+  Platform,
+} from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import NavigationButton from '../components/NavigationButton';
 
 function Login(navigation: any) {
@@ -21,45 +30,60 @@ function Login(navigation: any) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.logo_Text}>
-        <Image style={styles.logo} source={require('../asset/logo.png')} />
-        <Image
-          style={styles.logo_datanav}
-          source={require('../asset/Datanav_Texte.png')}
-        />
-      </View>
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.scrollContainer}
+        enableOnAndroid={true}
+        enableAutomaticScroll={Platform.OS === 'ios'}
+        keyboardShouldPersistTaps="handled">
+        <View style={styles.logo_Text}>
+          <Image style={styles.logo} source={require('../asset/logo.png')} />
+          <Image
+            style={styles.logo_datanav}
+            source={require('../asset/Datanav_Texte.png')}
+          />
+        </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.infos}>
-          Entrez les informations de votre
-          {'\n'}baie serveur :
-        </Text>
-        <TextInput
-          style={styles.inputInfos}
-          value={serverInfos}
-          onChangeText={info => setServerInfos(info)}
-        />
-      </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.infos}>
+            Entrez les informations de votre
+            {'\n'}baie serveur :
+          </Text>
+          <TextInput
+            style={styles.inputInfos}
+            value={serverInfos}
+            onChangeText={info => setServerInfos(info)}
+          />
+        </View>
 
-      <View style={styles.codeContainer}>
-        <Text style={styles.infos}>Entrez le code confidentiel :</Text>
-        <TextInput
-          style={styles.inputInfos}
-          value={code}
-          onChangeText={code => setCode(code)}
-        />
-      </View>
+        <View style={styles.codeContainer}>
+          <Text style={styles.infos}>Entrez le code confidentiel :</Text>
+          <TextInput
+            style={styles.inputInfos}
+            value={code}
+            onChangeText={code => setCode(code)}
+          />
+        </View>
 
-      <NavigationButton text={'Accéder'} onPress={consoleLog} />
+        <NavigationButton text={'Accéder'} onPress={consoleLog} />
+      </KeyboardAwareScrollView>
     </View>
   );
 }
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop:
+      Platform.OS === 'ios'
+        ? Dimensions.get('window').height * 0.01
+        : Dimensions.get('window').height * 0.0005,
+  },
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: -100,
+    marginTop: -Dimensions.get('window').height * 0.1,
   },
   infos: {
     textAlign: 'center',
@@ -68,7 +92,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '80%',
-    marginTop: 20,
+    marginTop: Dimensions.get('window').height * 0.02,
   },
   inputInfos: {
     height: 40,
@@ -77,7 +101,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     paddingHorizontal: 10,
     backgroundColor: 'white',
-    marginTop: 20,
+    marginTop: Dimensions.get('window').height * 0.02,
   },
   codeContainer: {
     width: '80%',
@@ -88,7 +112,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: '55%',
-    marginBottom: 20,
+    marginBottom: Dimensions.get('window').height * 0.05,
   },
   logo: {
     width: 57.57,
