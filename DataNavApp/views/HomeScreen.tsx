@@ -13,10 +13,7 @@ function HomeScreen({navigation}) {
         title="Go to Accelator Infos"
         onPress={() => navigation.navigate('Accelerator')}
       />
-      <Button
-        title="Login"
-        onPress={() => navigation.navigate('Login')}
-      />
+      <Button title="Login" onPress={() => navigation.navigate('Login')} />
     </View>
   );
 }
