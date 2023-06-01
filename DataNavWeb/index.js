@@ -2,12 +2,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const {Sequelize, QueryTypes} = require('sequelize');
 const app = express();
-const host = "http://localhost";
-const port = 3000;
+
+const tokens = [];
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
 require('dotenv').config();
+
+const host = process.env.WEB_HOST;
+const port = process.env.WEB_PORT;
 
 const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
     host: process.env.DB_HOST,
@@ -32,17 +35,34 @@ app.get('/', (req, res) => {
 
 app.post('/api/codeGenerator', (req, res) => {
     const random = require('random-string-generator');
-    const token = random(6, 'numeric');
-
     const numServer = req.body.numServer;
     const serverRoad = req.body.serverRoad;
-    //TODO: Save token to database with numServer and serverRoad
-    console.table(req);
-    //After 5 minutes, delete token from database
+
+    do {
+        var token = random(6, 'numeric');
+    }while(tokens.includes(token) || token[0] === 0);
+
+    sequelize.query("INSERT INTO Token (code, numServeur, serverRoute) VALUES (:code, :numServeur, :serverRoute)", {
+        replacements: {code: token, numServeur: numServer, serverRoute: serverRoad},
+        type: QueryTypes.INSERT
+    }).then(() => {
+        tokens.push(token);
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send({error: err});
+    });
+
     setTimeout(() => {
-        //TODO: Delete token from database
-        console.log("Token deleted: " + token);
-    }, 3000); //TODO: Change to 300000
+        sequelize.query("DELETE FROM Token WHERE code = :code", {
+            replacements: {code: token},
+            type: QueryTypes.DELETE
+        }).then(() => {
+            tokens.splice(tokens.indexOf(token), 1);
+        }).catch((err) => {
+            console.log(err);
+        });
+    }, 300000);
+
     res.status(200).send({token:token});
 });
 
