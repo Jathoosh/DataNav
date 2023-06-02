@@ -47,11 +47,13 @@ function Login({navigation}) {
           onChangeText={code => setCode(code)}
         />
       </View>
-      {/* TODO: A supprimer lorsque la récup baie et serveur seront plus claires */}
+      {/* TODO: A supprimer lorsque la récup baie et serveur sera faite via le backend (sprint 4) */}
       {/* <NavigationButton text={'Accéder'} onPress={consoleLog} /> */}
 
-      {/* TODO: Récupérer infos du composant Login sur serveur et baie
-      Régle à déterminer avec l'équipe */}
+      {/* TODO: récupérer info serveur et baie via requète au backend 
+        Pour le moment j'ai récupéré les infos du serveur et le code transmis au composant MapsInfo
+        qui affichera seulement serverInfos pour la baie et un nombre choisi est attribué au serveur
+      */}
       <NavigationButton
         text={'Accéder'}
         onPress={() => navigation.navigate('Maps', {serverInfos, code})}
