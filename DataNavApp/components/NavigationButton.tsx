@@ -4,12 +4,14 @@ import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 const NavigationButton = ({
   text,
   onPress,
+  style,
 }: {
   text: string;
   onPress: () => void;
+  style?: object;
 }) => {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
+    <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
       <Text style={styles.textStyles}>{text}</Text>
     </TouchableOpacity>
   );
@@ -21,8 +23,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 5,
-    width: 235.24,
-    height: 51.01,
   },
   textStyles: {
     color: 'white',

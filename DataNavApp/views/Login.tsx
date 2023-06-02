@@ -2,21 +2,25 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, TextInput, Image} from 'react-native';
 import NavigationButton from '../components/NavigationButton';
 
-function Login(navigation: any) {
+function Login({navigation}) {
   /*TODO:
     - modify binding fields to match the serverInfos and code (backend)
   */
   const [serverInfos, setServerInfos] = useState('');
   const [code, setCode] = useState('');
 
-  const consoleLog = () => {
-    console.log('serverInfos : ' + serverInfos + ' \n code : ' + code);
-    clearInput();
-  };
-
-  const clearInput = () => {
+  //TODO: Voir si nécessaire par la suite
+  /*const clearInput = () => { 
     setServerInfos('');
     setCode('');
+  };*/
+
+  const handleNavigateToMaps = () => {
+    if (serverInfos && code) {
+      navigation.navigate('Maps', {serverInfos, code});
+    } else {
+      console.log('Veuillez remplir les champs');
+    }
   };
 
   return (
@@ -47,7 +51,14 @@ function Login(navigation: any) {
           onChangeText={code => setCode(code)}
         />
       </View>
-      <NavigationButton text={'Accéder'} onPress={consoleLog} />
+      {/* TODO: A supprimer lorsque la récup baie et serveur sera faite via le backend (sprint 4) */}
+      {/* <NavigationButton text={'Accéder'} onPress={consoleLog} /> */}
+
+      {/* TODO: récupérer info serveur et baie via requète au backend 
+        Pour le moment j'ai récupéré les infos du serveur et le code transmis au composant MapsInfo
+        qui affichera seulement serverInfos pour la baie et un nombre choisi est attribué au serveur
+      */}
+      <NavigationButton text={'Accéder'} onPress={handleNavigateToMaps} />
     </View>
   );
 }
@@ -64,14 +75,14 @@ const styles = StyleSheet.create({
     top: 10,
   },
   logo: {
-    width: 60,
-    height: 70,
+    width: 70,
+    height: 90,
     left: 13,
     top: 30,
   },
   logo_datanav: {
-    width: 100,
-    height: 20,
+    width: 140,
+    height: 30,
     left: 70,
   },
   infos: {
