@@ -7,7 +7,9 @@ import {
   ImageBackground,
 } from 'react-native';
 
+// TODO : A changer par les valeurs qui seront récupérées de la page de login
 function MapsInfo({baie = '1000', serveur = '50'}) {
+
   // TODO : A changer par l'image de la carte qui sera générée
   const backgroundImagePath = require('../asset/map_background.png');
   const [selectedButton, setSelectedButton] = useState('Mode Plan');
@@ -69,13 +71,12 @@ const styles = StyleSheet.create({
   // Style des infos sur numéro baie et serveur
   infoContainer: {
     alignItems: 'center',
-    padding: 10,
+    marginTop: 20,
   },
   infoBaie: {
     color: 'black',
     fontSize: 16,
     fontWeight: 'bold',
-    marginVertical: 5,
   },
   posRectangle: {
     backgroundColor: 'rgba(255, 255, 255, 0.7)',
