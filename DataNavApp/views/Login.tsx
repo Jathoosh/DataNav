@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, TextInput, Image} from 'react-native';
 import NavigationButton from '../components/NavigationButton';
 
-function Login(navigation: any) {
+function Login({navigation}) {
   /*TODO:
     - modify binding fields to match the serverInfos and code (backend)
   */
@@ -47,7 +47,15 @@ function Login(navigation: any) {
           onChangeText={code => setCode(code)}
         />
       </View>
-      <NavigationButton text={'Accéder'} onPress={consoleLog} />
+      {/* TODO: A supprimer lorsque la récup baie et serveur seront plus claires */}
+      {/* <NavigationButton text={'Accéder'} onPress={consoleLog} /> */}
+
+      {/* TODO: Récupérer infos du composant Login sur serveur et baie
+      Régle à déterminer avec l'équipe */}
+      <NavigationButton
+        text={'Accéder'}
+        onPress={() => navigation.navigate('Maps', {serverInfos, code})}
+      />
     </View>
   );
 }
@@ -64,14 +72,14 @@ const styles = StyleSheet.create({
     top: 10,
   },
   logo: {
-    width: 60,
-    height: 70,
+    width: 70,
+    height: 90,
     left: 13,
     top: 30,
   },
   logo_datanav: {
-    width: 100,
-    height: 20,
+    width: 140,
+    height: 30,
     left: 70,
   },
   infos: {

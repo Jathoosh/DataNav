@@ -8,7 +8,9 @@ import {
 } from 'react-native';
 
 // TODO : A changer par les valeurs qui seront récupérées de la page de login
-function MapsInfo({baie = '1000', serveur = '50'}) {
+function MapsInfo({route}) {
+
+  const {serverInfos, serveur = '50'} = route.params;
 
   // TODO : A changer par l'image de la carte qui sera générée
   const backgroundImagePath = require('../asset/map_background.png');
@@ -23,7 +25,7 @@ function MapsInfo({baie = '1000', serveur = '50'}) {
           <View style={styles.infoContainer}>
             <View style={styles.posRectangle}>
               <Text style={styles.infoBaie}>
-                Baie : {baie} - Serveur : {serveur}
+                Baie : {serverInfos} - Serveur : {serveur}
               </Text>
             </View>
           </View>
