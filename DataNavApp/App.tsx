@@ -22,7 +22,7 @@ function App(): React.JSX.Element {
         <Stack.Screen
           name="Home"
           component={require('./views/HomeScreen').default}
-          options={{title: 'DATANAV'}}
+          options={{headerShown: false}}
         />
         <Stack.Screen
           name="Accelerator"
