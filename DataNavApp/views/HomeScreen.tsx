@@ -41,6 +41,14 @@ function HomeScreen({navigation}) {
             marginTop: 20,
           }}
         />
+        <NavigationButton
+          text={"Let's crash the application"}
+          onPress={() => navigation.navigate('UnityPage')}
+          style={{
+            marginVertical: 10,
+            marginTop: 0,
+          }}
+        />
       </View>
     </View>
   );

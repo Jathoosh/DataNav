@@ -38,6 +38,11 @@ function App(): React.JSX.Element {
           component={require('./views/Login').default}
           options={{headerShown: false}}
         />
+        <Stack.Screen
+          name="UnityPage"
+          component={require('./views/UnityPage').default}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -9,7 +9,6 @@ import {
 
 // TODO : A changer par les valeurs qui seront récupérées de la page de login (niv backend)
 function MapsInfo({route}) {
-
   const {serverInfos, serveur = '50'} = route.params;
 
   // TODO : A changer par l'image de la carte qui sera générée
