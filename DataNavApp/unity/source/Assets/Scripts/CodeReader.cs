@@ -1,0 +1,144 @@
+using Unity.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
+using TMPro;
+using ZXing;
+using System.Diagnostics;
+
+public class CodeReader : MonoBehaviour
+{
+
+    [SerializeField]
+    private ARSession session;
+    [SerializeField]
+    private ARSessionOrigin sessionOrigin;
+    [SerializeField]
+    private ARCameraManager cameraManager;
+    [SerializeField]
+    private TextMeshProUGUI TMPresultText;
+    [SerializeField]
+    private TextMeshProUGUI TMPtimerText;
+    [SerializeField]
+    private string strLastResult;
+    [SerializeField]
+    private bool init = false;
+    private float lastProcessingTime;
+
+    private Texture2D t2dSource;
+    private Texture2D t2dGrayScaled;
+
+    private IBarcodeReader barcodeReader = new BarcodeReader
+    {
+        AutoRotate = true,
+        Options = new ZXing.Common.DecodingOptions
+        {
+            TryHarder = true,
+            PossibleFormats = new List<BarcodeFormat>
+            {
+                BarcodeFormat.QR_CODE
+                //BarcodeFormat.DATA_MATRIX
+            }
+        }
+    };
+
+    private Result result;
+
+    private void OnEnable()
+    {
+        cameraManager.frameReceived += OnCameraFrameReceived;
+    }
+
+    private void OnDisable()
+    {
+        cameraManager.frameReceived -= OnCameraFrameReceived;
+    }
+
+    private void OnCameraFrameReceived(ARCameraFrameEventArgs eventArgs)
+    {
+        if (Time.time - lastProcessingTime < 0.2f)
+        {
+            return;
+        }
+        lastProcessingTime = Time.time;
+
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+
+        if (!cameraManager.TryAcquireLatestCpuImage(out XRCpuImage image))
+        {
+            TMPresultText.text = "Error TryAcquireLatestCpuImage";
+            return;
+        }
+
+        if (!init)
+        {
+            //cameraManager.subsystem.currentConfiguration = cameraManager.GetConfigurations(Allocator.Temp)[2]; //0=640*480, 1= 1280*720, 2=1920*1080
+            init = true;
+        }
+
+        var conversionParams = new XRCpuImage.ConversionParams
+        {
+            // Get the entire image
+            inputRect = new RectInt(0, 0, image.width, image.height),
+
+            // Downsample
+            outputDimensions = new Vector2Int(image.width, image.height),
+
+            outputFormat = TextureFormat.RGBA32,
+
+            // Flip across the vertical axis (mirror image)
+            transformation = XRCpuImage.Transformation.MirrorY
+        };
+
+        // See how many bytes you need to store the final image
+        int size = image.GetConvertedDataSize(conversionParams);
+
+        // Allocate a buffer to store the image
+        var buffer = new NativeArray<byte>(size, Allocator.Temp);
+
+        // Extract the image data
+        image.Convert(conversionParams, buffer);
+
+        image.Dispose();
+
+        t2dSource = new Texture2D(
+            conversionParams.outputDimensions.x,
+            conversionParams.outputDimensions.y,
+            conversionParams.outputFormat,
+            false);
+
+        t2dSource.LoadRawTextureData(buffer);
+        t2dSource.Apply();
+
+        buffer.Dispose();
+        /*
+        Texture2D t2dGrayScaled = new Texture2D(t2dSource.width, t2dSource.height, TextureFormat.RGBA32, false);
+
+        Color[] sourcePixels = t2dSource.GetPixels();
+
+        Color[] destPixels = new Color[sourcePixels.Length];
+
+        for (int i = 0; i < sourcePixels.Length; i++)
+        {
+            float gray = 0.299f * sourcePixels[i].r + 0.587f * sourcePixels[i].g + 0.114f * sourcePixels[i].b;
+            destPixels[i] = new Color(gray, gray, gray, sourcePixels[i].a);
+        }
+
+        t2dGrayScaled.SetPixels(destPixels);
+        t2dGrayScaled.Apply();
+        */
+
+        // Detect and decode the barcode inside the bitmap
+        result = barcodeReader.Decode(t2dSource.GetPixels32(), t2dSource.width, t2dSource.height);
+        stopwatch.Stop();
+        TMPtimerText.text = stopwatch.ElapsedMilliseconds.ToString() + "ms X:" + conversionParams.outputDimensions.x.ToString()+" Y:"+conversionParams.outputDimensions.y.ToString();
+        if (result != null)
+        {
+            TMPresultText.text = "result : "+ result.Text;
+            Handheld.Vibrate();
+        }
+    }
+}
+
