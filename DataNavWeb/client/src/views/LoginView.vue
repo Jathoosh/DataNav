@@ -2,6 +2,7 @@
     <div class="flex-horizontal">
         <div class="flex-vertical">
             <img src="../assets/logo.png" alt="logo" width="150" height="150">
+            <p v-if="loginState === 'error'" style="color: red">Nom d'utilisateur ou mot de passe incorrect</p>
             <form>
                 <div class="form-group">
                     <label for="username">Nom d'utilisateur</label>
@@ -11,7 +12,7 @@
                     <label for="password">Mot de passe</label>
                     <input type="text" v-model="password" class="form-control" id="password" placeholder="Mot de passe">
                 </div>
-                <button type="submit" class="btn btn-primary" v-on:click="login">Se connecter</button>
+                <button :disabled="loginState === 'loading'" type="submit" class="btn btn-primary" v-on:click="login">Se connecter</button>
             </form>
         </div>
         <div class="v-line"></div>
@@ -35,6 +36,20 @@ export default {
             password: ''
         }
     },
+    props: {
+        loginState: {
+            type: String,
+            required: true,
+            validator: function (value) {
+                return ['not logged in', 'loading', 'logged in', 'error'].indexOf(value) !== -1
+            }
+        }
+    },
+    methods: {
+        login() {
+            this.$emit('login', {username: this.username, password: this.password});
+        }
+    }
 }
 </script>
 
@@ -76,8 +91,7 @@ export default {
     width: 300px;
     display: flex;
     flex-direction: column;
-    justify-content: start;
-    align-items: start;
+    align-items: flex-start;
 }
 .v-line {
     width: 1px;
@@ -97,6 +111,14 @@ button {
     color: #FFFFFF;
     background-color: #0390BF;
     border: none;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #036E8C;
+}
+button:disabled {
+    background-color: #BFBFBF;
+    cursor: not-allowed;
 }
 .form-group,button {
     margin-top: 30px;
