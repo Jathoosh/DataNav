@@ -9,15 +9,11 @@ function Login({navigation}) {
   const [serverInfos, setServerInfos] = useState('');
   const [code, setCode] = useState('');
 
-  const consoleLog = () => {
-    console.log('serverInfos : ' + serverInfos + ' \n code : ' + code);
-    clearInput();
-  };
-
-  const clearInput = () => {
+  //TODO: Voir si nécessaire par la suite
+  /*const clearInput = () => { 
     setServerInfos('');
     setCode('');
-  };
+  };*/
 
   const handleNavigateToMaps = () => {
     if (serverInfos && code) {
