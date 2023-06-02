@@ -1,14 +1,21 @@
-import {View, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet, Image, useColorScheme} from 'react-native';
 import NavigationButton from '../components/NavigationButton';
 
 function HomeScreen({navigation}) {
+  const colorScheme = useColorScheme();
+  const logoStyle = colorScheme === 'dark' ? {tintColor: 'white'} : null;
+  const logoDatanavStyle = colorScheme === 'dark' ? {tintColor: 'white'} : null;
+
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
-        <Image source={require('../asset/logo.png')} style={styles.logo} />
+        <Image
+          source={require('../asset/logo.png')}
+          style={[styles.logo, logoStyle]}
+        />
         <Image
           source={require('../asset/Datanav_Texte.png')}
-          style={styles.logo_datanav}
+          style={[styles.logo_datanav, logoDatanavStyle]}
         />
       </View>
       <View>
