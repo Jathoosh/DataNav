@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, TextInput, Image} from 'react-native';
 import NavigationButton from '../components/NavigationButton';
 
 function Login(navigation: any) {
-  /*To Do :
+  /*TODO:
     - modify binding fields to match the serverInfos and code (backend)
   */
   const [serverInfos, setServerInfos] = useState('');
@@ -21,14 +21,13 @@ function Login(navigation: any) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.logo_Text}>
-        <Image style={styles.logo} source={require('../asset/logo.png')} />
+      <View style={styles.logoContainer}>
+        <Image source={require('../asset/logo.png')} style={styles.logo} />
         <Image
-          style={styles.logo_datanav}
           source={require('../asset/Datanav_Texte.png')}
+          style={styles.logo_datanav}
         />
       </View>
-
       <View style={styles.inputContainer}>
         <Text style={styles.infos}>
           Entrez les informations de votre
@@ -40,7 +39,6 @@ function Login(navigation: any) {
           onChangeText={info => setServerInfos(info)}
         />
       </View>
-
       <View style={styles.codeContainer}>
         <Text style={styles.infos}>Entrez le code confidentiel :</Text>
         <TextInput
@@ -49,17 +47,32 @@ function Login(navigation: any) {
           onChangeText={code => setCode(code)}
         />
       </View>
-
       <NavigationButton text={'Accéder'} onPress={consoleLog} />
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: -100,
+  },
+  logoContainer: {
+    position: 'absolute',
+    left: 10,
+    top: 10,
+  },
+  logo: {
+    width: 60,
+    height: 70,
+    left: 13,
+    top: 30,
+  },
+  logo_datanav: {
+    width: 100,
+    height: 20,
+    left: 70,
   },
   infos: {
     textAlign: 'center',
@@ -68,7 +81,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '80%',
-    marginTop: 20,
+    marginTop: 40,
   },
   inputInfos: {
     height: 40,
@@ -81,22 +94,9 @@ const styles = StyleSheet.create({
   },
   codeContainer: {
     width: '80%',
-    marginTop: '30%',
+    marginTop: '20%',
     marginBottom: '20%',
   },
-  logo_Text: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: '55%',
-    marginBottom: 20,
-  },
-  logo: {
-    width: 57.57,
-    height: 80,
-  },
-  logo_datanav: {
-    width: 115.74,
-    height: 20,
-  },
 });
+
 export default Login;
