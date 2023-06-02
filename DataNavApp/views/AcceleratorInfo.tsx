@@ -36,7 +36,6 @@ function AcceleratorInfos({navigation}) {
       <Text style={styles.textX}>X: {accelerometerData.x.toFixed(2)}</Text>
       <Text style={styles.textY}>Y: {accelerometerData.y.toFixed(2)}</Text>
       <Text style={styles.textZ}>Z: {accelerometerData.z.toFixed(2)}</Text>
-      <Button title="Go to Maps" onPress={() => navigation.navigate('Maps')} />
       <Button
         title="Go to Login"
         onPress={() => navigation.navigate('Login')}
