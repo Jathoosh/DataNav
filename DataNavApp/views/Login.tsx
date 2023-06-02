@@ -19,6 +19,14 @@ function Login({navigation}) {
     setCode('');
   };
 
+  const handleNavigateToMaps = () => {
+    if (serverInfos && code) {
+      navigation.navigate('Maps', {serverInfos, code});
+    } else {
+      console.log('Veuillez remplir les champs');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
@@ -54,10 +62,7 @@ function Login({navigation}) {
         Pour le moment j'ai récupéré les infos du serveur et le code transmis au composant MapsInfo
         qui affichera seulement serverInfos pour la baie et un nombre choisi est attribué au serveur
       */}
-      <NavigationButton
-        text={'Accéder'}
-        onPress={() => navigation.navigate('Maps', {serverInfos, code})}
-      />
+      <NavigationButton text={'Accéder'} onPress={handleNavigateToMaps} />
     </View>
   );
 }
