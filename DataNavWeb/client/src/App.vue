@@ -1,11 +1,59 @@
 <template>
-  <div></div>
+  <div>
+    <RouterView
+      @login="login"
+      @codeGeneration="codeGeneration"
+      :username="username"
+      :company="company"
+      :loginState="loginState"
+      :codeState="codeState"
+      :token="token"
+    />
+  </div>
 </template>
 
 <script>
+import loginFunc from '../api/login.js'
+import codeGenerator from '../api/codeGenerator.js'
+
 export default {
   name: 'App',
   components: {
+  },
+  data() {
+    return {
+      username: '',
+      company: '',
+      loginState: "not logged in",
+      codeState: "no code",
+      token: "code d'authentification"
+    }
+  },
+  methods: {
+    async login(data) {
+      this.loginState = "loading";
+      const res = await loginFunc(data);
+      if (res.status === 200) {
+        this.username = data.username;
+        this.company = res.data.company;
+        this.loginState = "logged in";
+        this.$router.push('/auth-code');
+      }
+      else {
+        this.loginState = "error";
+      }
+    },
+    async codeGeneration(data) {
+      this.codeState = "loading";
+      const res = await codeGenerator(data);
+      if (res.status === 200) {
+        this.token = res.data.token;
+        this.codeState = "Code Obtained";
+      }
+      else {
+        this.codeState = "error";
+      }
+    }
   }
 }
 </script>
