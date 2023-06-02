@@ -5,6 +5,7 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using TMPro;
 using ZXing;
+using System.Diagnostics;
 
 public class CodeReader : MonoBehaviour
 {
@@ -18,24 +19,26 @@ public class CodeReader : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI TMPresultText;
     [SerializeField]
+    private TextMeshProUGUI TMPtimerText;
+    [SerializeField]
     private string strLastResult;
     [SerializeField]
-    private float nextActionTime = 0.0f;
-    [SerializeField]
-    private float period = 0.25f; // correspond to 4 frames per second
+    private bool init = false;
+    private float lastProcessingTime;
 
-    private Texture2D t2dCameraImageTexture;
+    private Texture2D t2dSource;
+    private Texture2D t2dGrayScaled;
 
     private IBarcodeReader barcodeReader = new BarcodeReader
     {
-        AutoRotate = false,
+        AutoRotate = true,
         Options = new ZXing.Common.DecodingOptions
         {
-            TryHarder = false,
+            TryHarder = true,
             PossibleFormats = new List<BarcodeFormat>
             {
-                BarcodeFormat.QR_CODE,
-                BarcodeFormat.DATA_MATRIX
+                BarcodeFormat.QR_CODE
+                //BarcodeFormat.DATA_MATRIX
             }
         }
     };
@@ -54,36 +57,45 @@ public class CodeReader : MonoBehaviour
 
     private void OnCameraFrameReceived(ARCameraFrameEventArgs eventArgs)
     {
-        // Skip frames to only process 4 per second
-        if (Time.time < nextActionTime)
+        if (Time.time - lastProcessingTime < 0.2f)
         {
             return;
         }
-        nextActionTime = Time.time + period;
+        lastProcessingTime = Time.time;
+
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
 
         if (!cameraManager.TryAcquireLatestCpuImage(out XRCpuImage image))
         {
+            TMPresultText.text = "Error TryAcquireLatestCpuImage";
             return;
+        }
+
+        if (!init)
+        {
+            //cameraManager.subsystem.currentConfiguration = cameraManager.GetConfigurations(Allocator.Temp)[2]; //0=640*480, 1= 1280*720, 2=1920*1080
+            init = true;
         }
 
         var conversionParams = new XRCpuImage.ConversionParams
         {
-            // Get the entire image.
+            // Get the entire image
             inputRect = new RectInt(0, 0, image.width, image.height),
 
-            // Downsample by 2.
-            outputDimensions = new Vector2Int(image.width / 2, image.height / 2),
+            // Downsample
+            outputDimensions = new Vector2Int(image.width, image.height),
 
             outputFormat = TextureFormat.RGBA32,
 
-            // Flip across the vertical axis (mirror image).
+            // Flip across the vertical axis (mirror image)
             transformation = XRCpuImage.Transformation.MirrorY
         };
 
-        // See how many bytes you need to store the final image.
+        // See how many bytes you need to store the final image
         int size = image.GetConvertedDataSize(conversionParams);
 
-        // Allocate a buffer to store the image.
+        // Allocate a buffer to store the image
         var buffer = new NativeArray<byte>(size, Allocator.Temp);
 
         // Extract the image data
@@ -91,23 +103,42 @@ public class CodeReader : MonoBehaviour
 
         image.Dispose();
 
-        t2dCameraImageTexture = new Texture2D(
+        t2dSource = new Texture2D(
             conversionParams.outputDimensions.x,
             conversionParams.outputDimensions.y,
             conversionParams.outputFormat,
             false);
 
-        t2dCameraImageTexture.LoadRawTextureData(buffer);
-        t2dCameraImageTexture.Apply();
+        t2dSource.LoadRawTextureData(buffer);
+        t2dSource.Apply();
 
         buffer.Dispose();
+        /*
+        Texture2D t2dGrayScaled = new Texture2D(t2dSource.width, t2dSource.height, TextureFormat.RGBA32, false);
+
+        Color[] sourcePixels = t2dSource.GetPixels();
+
+        Color[] destPixels = new Color[sourcePixels.Length];
+
+        for (int i = 0; i < sourcePixels.Length; i++)
+        {
+            float gray = 0.299f * sourcePixels[i].r + 0.587f * sourcePixels[i].g + 0.114f * sourcePixels[i].b;
+            destPixels[i] = new Color(gray, gray, gray, sourcePixels[i].a);
+        }
+
+        t2dGrayScaled.SetPixels(destPixels);
+        t2dGrayScaled.Apply();
+        */
 
         // Detect and decode the barcode inside the bitmap
-        result = barcodeReader.Decode(t2dCameraImageTexture.GetPixels32(), t2dCameraImageTexture.width, t2dCameraImageTexture.height);
-
+        result = barcodeReader.Decode(t2dSource.GetPixels32(), t2dSource.width, t2dSource.height);
+        stopwatch.Stop();
+        TMPtimerText.text = stopwatch.ElapsedMilliseconds.ToString() + "ms X:" + conversionParams.outputDimensions.x.ToString()+" Y:"+conversionParams.outputDimensions.y.ToString();
         if (result != null)
         {
-            TMPresultText.text = result.Text;
+            TMPresultText.text = "result : "+ result.Text;
+            Handheld.Vibrate();
         }
     }
 }
+
