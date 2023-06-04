@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const {Sequelize, QueryTypes} = require('sequelize');
+const bcrypt=require('bcrypt');
 const app = express();
 
 const tokens = [];
@@ -36,9 +37,10 @@ app.get('/', (req, res) => {
 // Login Process
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
-  
+
+    console.log(username);
     sequelize
-    .query('SELECT * FROM users WHERE username = :username', {
+    .query('SELECT * FROM Utilisateur WHERE email = :username', {
         replacements: { username: username },
         type: QueryTypes.SELECT,
     })
@@ -47,7 +49,7 @@ app.post('/api/login', (req, res) => {
         res.status(401).send({ error: 'Nom d\'utilisateur incorrect' });
         } else {
         const user = results[0];
-        const hashedPassword = user.password;
+        const hashedPassword = user.mot_de_passe;
 
         bcrypt.compare(password, hashedPassword, (err, result) => {
             if (err) {
