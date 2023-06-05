@@ -11,21 +11,25 @@ import {
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import NavigationButton from '../components/NavigationButton';
 
-function Login(navigation: any) {
-  /*To Do :
+function Login({navigation}) {
+  /*TODO:
     - modify binding fields to match the serverInfos and code (backend)
   */
   const [serverInfos, setServerInfos] = useState('');
   const [code, setCode] = useState('');
 
-  const consoleLog = () => {
-    console.log('serverInfos : ' + serverInfos + ' \n code : ' + code);
-    clearInput();
-  };
-
-  const clearInput = () => {
+  //TODO: Voir si nécessaire par la suite
+  /*const clearInput = () => {
     setServerInfos('');
     setCode('');
+  };*/
+
+  const handleNavigateToMaps = () => {
+    if (serverInfos && code) {
+      navigation.navigate('Maps', {serverInfos, code});
+    } else {
+      console.log('Veuillez remplir les champs');
+    }
   };
 
   return (
@@ -35,14 +39,13 @@ function Login(navigation: any) {
         enableOnAndroid={true}
         enableAutomaticScroll={Platform.OS === 'ios'}
         keyboardShouldPersistTaps="handled">
-        <View style={styles.logo_Text}>
-          <Image style={styles.logo} source={require('../asset/logo.png')} />
+        <View style={styles.logoContainer}>
+          <Image source={require('../asset/logo.png')} style={styles.logo} />
           <Image
-            style={styles.logo_datanav}
             source={require('../asset/Datanav_Texte.png')}
+            style={styles.logo_datanav}
           />
         </View>
-
         <View style={styles.inputContainer}>
           <Text style={styles.infos}>
             Entrez les informations de votre
@@ -54,7 +57,6 @@ function Login(navigation: any) {
             onChangeText={info => setServerInfos(info)}
           />
         </View>
-
         <View style={styles.codeContainer}>
           <Text style={styles.infos}>Entrez le code confidentiel :</Text>
           <TextInput
@@ -63,12 +65,19 @@ function Login(navigation: any) {
             onChangeText={code => setCode(code)}
           />
         </View>
+        {/* TODO: A supprimer lorsque la récup baie et serveur sera faite via le backend (sprint 4) */}
+        {/* <NavigationButton text={'Accéder'} onPress={consoleLog} /> */}
 
-        <NavigationButton text={'Accéder'} onPress={consoleLog} />
+        {/* TODO: récupérer info serveur et baie via requète au backend 
+          Pour le moment j'ai récupéré les infos du serveur et le code transmis au composant MapsInfo
+          qui affichera seulement serverInfos pour la baie et un nombre choisi est attribué au serveur
+        */}
+        <NavigationButton text={'Accéder'} onPress={handleNavigateToMaps} />
       </KeyboardAwareScrollView>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
@@ -84,6 +93,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: -Dimensions.get('window').height * 0.1,
+  },
+  logoContainer: {
+    position: 'absolute',
+    left: 10,
+    top: 10,
+  },
+  logo: {
+    width: 70,
+    height: 90,
+    left: 13,
+    top: 30,
+  },
+  logo_datanav: {
+    width: 140,
+    height: 30,
+    left: 70,
   },
   infos: {
     textAlign: 'center',
@@ -105,22 +130,9 @@ const styles = StyleSheet.create({
   },
   codeContainer: {
     width: '80%',
-    marginTop: '30%',
+    marginTop: '20%',
     marginBottom: '20%',
   },
-  logo_Text: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: '55%',
-    marginBottom: Dimensions.get('window').height * 0.05,
-  },
-  logo: {
-    width: 57.57,
-    height: 80,
-  },
-  logo_datanav: {
-    width: 115.74,
-    height: 20,
-  },
 });
+
 export default Login;
