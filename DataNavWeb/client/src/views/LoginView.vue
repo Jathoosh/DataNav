@@ -6,11 +6,11 @@
             <form>
                 <div class="form-group">
                     <label for="username">Nom d'utilisateur</label>
-                    <input type="text" v-model="username" class="form-control" id="username" placeholder="Nom d'utilisateur">
+                    <input type="email" v-model="username" class="form-control" id="username" placeholder="Email" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Mot de passe</label>
-                    <input type="text" v-model="password" class="form-control" id="password" placeholder="Mot de passe">
+                    <input type="password" v-model="password" class="form-control" id="password" placeholder="Mot de passe" required>
                 </div>
                 <button :disabled="loginState === 'loading'" type="submit" class="btn btn-primary" v-on:click="login">Se connecter</button>
             </form>

@@ -34,13 +34,16 @@ export default {
       this.loginState = "loading";
       const res = await loginFunc(data);
       if (res.status === 200) {
-        this.username = data.username;
+        this.username = res.data.username;
         this.company = res.data.company;
         this.loginState = "logged in";
         this.$router.push('/auth-code');
       }
       else {
         this.loginState = "error";
+        setTimeout(() => {
+          this.loginState = "not logged in";
+        }, 3000);
       }
     },
     async codeGeneration(data) {
@@ -52,6 +55,9 @@ export default {
       }
       else {
         this.codeState = "error";
+        setTimeout(() => {
+          this.codeState = "no code";
+        }, 3000);
       }
     }
   }
