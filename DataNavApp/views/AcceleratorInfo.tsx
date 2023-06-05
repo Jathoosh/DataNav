@@ -32,6 +32,7 @@ function AcceleratorInfos({navigation}) {
         alignItems: 'center',
         justifyContent: 'center',
       }}>
+      <Text>Accelerator Infos</Text>
       <Text style={styles.error}> {error_message}</Text>
       <Text style={styles.textX}>X: {accelerometerData.x.toFixed(2)}</Text>
       <Text style={styles.textY}>Y: {accelerometerData.y.toFixed(2)}</Text>
