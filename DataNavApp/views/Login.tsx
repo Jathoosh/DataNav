@@ -109,6 +109,22 @@ const styles = StyleSheet.create({
     height: 30,
     left: 70,
   },
+  logoContainer: {
+    position: 'absolute',
+    left: 10,
+    top: 10,
+  },
+  logo: {
+    width: 70,
+    height: 90,
+    left: 13,
+    top: 30,
+  },
+  logo_datanav: {
+    width: 140,
+    height: 30,
+    left: 70,
+  },
   infos: {
     textAlign: 'center',
     fontSize: 20,
