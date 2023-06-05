@@ -92,7 +92,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: -Dimensions.get('window').height * 0.1,
   },
   logoContainer: {
     position: 'absolute',
