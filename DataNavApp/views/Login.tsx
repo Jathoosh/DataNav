@@ -92,22 +92,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  logoContainer: {
-    position: 'absolute',
-    left: 10,
-    top: 10,
-  },
-  logo: {
-    width: 70,
-    height: 90,
-    left: 13,
-    top: 30,
-  },
-  logo_datanav: {
-    width: 140,
-    height: 30,
-    left: 70,
+    marginTop: -Dimensions.get('window').height * 0.1,
   },
   logoContainer: {
     position: 'absolute',
