@@ -1,5 +1,14 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TextInput, Image} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Image,
+  Dimensions,
+  Platform,
+} from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import NavigationButton from '../components/NavigationButton';
 
 function Login({navigation}) {
@@ -25,45 +34,60 @@ function Login({navigation}) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.logoContainer}>
-        <Image source={require('../asset/logo.png')} style={styles.logo} />
-        <Image
-          source={require('../asset/Datanav_Texte.png')}
-          style={styles.logo_datanav}
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.infos}>
-          Entrez les informations de votre
-          {'\n'}baie serveur :
-        </Text>
-        <TextInput
-          style={styles.inputInfos}
-          value={serverInfos}
-          onChangeText={info => setServerInfos(info)}
-        />
-      </View>
-      <View style={styles.codeContainer}>
-        <Text style={styles.infos}>Entrez le code confidentiel :</Text>
-        <TextInput
-          style={styles.inputInfos}
-          value={code}
-          onChangeText={code => setCode(code)}
-        />
-      </View>
-      {/* TODO: A supprimer lorsque la récup baie et serveur sera faite via le backend (sprint 4) */}
-      {/* <NavigationButton text={'Accéder'} onPress={consoleLog} /> */}
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.scrollContainer}
+        enableOnAndroid={true}
+        enableAutomaticScroll={Platform.OS === 'ios'}
+        keyboardShouldPersistTaps="handled">
+        <View style={styles.logoContainer}>
+          <Image source={require('../asset/logo.png')} style={styles.logo} />
+          <Image
+            source={require('../asset/Datanav_Texte.png')}
+            style={styles.logo_datanav}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.infos}>
+            Entrez les informations de votre
+            {'\n'}baie serveur :
+          </Text>
+          <TextInput
+            style={styles.inputInfos}
+            value={serverInfos}
+            onChangeText={info => setServerInfos(info)}
+          />
+        </View>
+        <View style={styles.codeContainer}>
+          <Text style={styles.infos}>Entrez le code confidentiel :</Text>
+          <TextInput
+            style={styles.inputInfos}
+            value={code}
+            onChangeText={code => setCode(code)}
+          />
+        </View>
+        {/* TODO: A supprimer lorsque la récup baie et serveur sera faite via le backend (sprint 4) */}
+        {/* <NavigationButton text={'Accéder'} onPress={consoleLog} /> */}
 
-      {/* TODO: récupérer info serveur et baie via requète au backend 
+        {/* TODO: récupérer info serveur et baie via requète au backend 
         Pour le moment j'ai récupéré les infos du serveur et le code transmis au composant MapsInfo
         qui affichera seulement serverInfos pour la baie et un nombre choisi est attribué au serveur
       */}
-      <NavigationButton text={'Accéder'} onPress={handleNavigateToMaps} />
+        <NavigationButton text={'Accéder'} onPress={handleNavigateToMaps} />
+      </KeyboardAwareScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop:
+      Platform.OS === 'ios'
+        ? Dimensions.get('window').height * 0.01
+        : Dimensions.get('window').height * 0.0005,
+  },
   container: {
     flex: 1,
     alignItems: 'center',
@@ -92,7 +116,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '80%',
-    marginTop: 40,
+    marginTop: Dimensions.get('window').height * 0.02,
   },
   inputInfos: {
     height: 40,
@@ -101,7 +125,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     paddingHorizontal: 10,
     backgroundColor: 'white',
-    marginTop: 20,
+    marginTop: Dimensions.get('window').height * 0.02,
   },
   codeContainer: {
     width: '80%',
