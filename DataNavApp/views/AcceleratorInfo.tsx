@@ -1,29 +1,40 @@
 import React from 'react';
 import {Button, Text, View, Platform, StyleSheet} from 'react-native';
 import {Subscription} from 'rxjs';
-import {accelerometer} from 'react-native-sensors';
+import {accelerometer, gyroscope} from 'react-native-sensors';
 
 function AcceleratorInfos({navigation}) {
-  const [accelerometerData, setData] = React.useState({x: 0, y: 0, z: 0});
-  let error_message = 'Accelerometer data available';
-  if (Platform.OS === 'android') {
-    React.useEffect(() => {
-      let subscription: Subscription | null = null;
-      if (accelerometer) {
-        subscription = accelerometer.subscribe(({x, y, z}) => {
-          setData({x, y, z});
-        });
-      }
+  const [accelerometerData, setAccelerometerData] = React.useState({
+    x: 0,
+    y: 0,
+    z: 0,
+  });
+  const [gyroscopeData, setGyroscopeData] = React.useState({x: 0, y: 0, z: 0});
+  // TODO : remove if statement at the end of SPRINT 3
+  //if (Platform.OS === 'android') {
+  React.useEffect(() => {
+    let subscriptionAccel: Subscription | null = null;
+    let subscriptionGyro: Subscription | null = null;
+    if (accelerometer) {
+      subscriptionAccel = accelerometer.subscribe(({x, y, z}) => {
+        setAccelerometerData({x, y, z});
+      });
+    }
+    if (gyroscope) {
+      subscriptionGyro = gyroscope.subscribe(({x, y, z}) => {
+        setGyroscopeData({x, y, z});
+      });
+    }
 
-      return () => {
-        if (subscription) {
-          subscription.unsubscribe();
-        }
-      };
-    }, []);
-  } else {
-    error_message = 'accelerometer data not available';
-  }
+    return () => {
+      if (subscriptionAccel) {
+        subscriptionAccel.unsubscribe();
+      }
+      if (subscriptionGyro) {
+        subscriptionGyro.unsubscribe();
+      }
+    };
+  }, []);
 
   return (
     <View
@@ -32,10 +43,18 @@ function AcceleratorInfos({navigation}) {
         alignItems: 'center',
         justifyContent: 'center',
       }}>
-      <Text style={styles.error}> {error_message}</Text>
-      <Text style={styles.textX}>X: {accelerometerData.x.toFixed(2)}</Text>
-      <Text style={styles.textY}>Y: {accelerometerData.y.toFixed(2)}</Text>
-      <Text style={styles.textZ}>Z: {accelerometerData.z.toFixed(2)}</Text>
+      <View style={styles.accelerometer}>
+        <Text>Accelerator Infos</Text>
+        <Text>X: {accelerometerData.x.toFixed(2)}</Text>
+        <Text>Y: {accelerometerData.y.toFixed(2)}</Text>
+        <Text>Z: {accelerometerData.z.toFixed(2)}</Text>
+      </View>
+      <View style={styles.gyroscope}>
+        <Text>Gyroscope Infos</Text>
+        <Text>X: {gyroscopeData.x.toFixed(2)}</Text>
+        <Text>Y: {gyroscopeData.y.toFixed(2)}</Text>
+        <Text>Z: {gyroscopeData.z.toFixed(2)}</Text>
+      </View>
       <Button
         title="Go to Login"
         onPress={() => navigation.navigate('Login')}
@@ -45,32 +64,19 @@ function AcceleratorInfos({navigation}) {
 }
 
 const styles = StyleSheet.create({
-  error: {
+  accelerometer: {
     position: 'absolute',
     fontSize: 15,
     top: 20,
     left: 20,
+    color: 'red',
   },
-  textX: {
+  gyroscope: {
     position: 'absolute',
-    fontSize: 24,
+    fontSize: 15,
     top: 100,
-    left: 100,
-    color: 'red',
-  },
-  textY: {
-    position: 'absolute',
-    fontSize: 24,
-    top: 150,
-    left: 100,
-    color: 'red',
-  },
-  textZ: {
-    position: 'absolute',
-    fontSize: 24,
-    top: 200,
-    left: 100,
-    color: 'red',
+    left: 20,
+    color: 'green',
   },
 });
 

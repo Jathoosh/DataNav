@@ -33,6 +33,41 @@ app.get('/', (req, res) => {
     res.render('index.html');
 });
 
+// Login Process
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+    
+    sequelize
+    .query('SELECT * FROM Utilisateur WHERE email = :username', {
+        replacements: { username: username },
+        type: QueryTypes.SELECT,
+    })
+    .then((results) => {
+        if (results.length === 0) {
+            res.status(422).send('Nom d\'utilisateur incorrect');
+        } else {
+            const user = results[0];
+            const hashedPassword = user.mot_de_passe;
+
+            bcrypt.compare(password, hashedPassword, (err, result) => {
+                if (err) {
+                    console.error('Erreur lors de la comparaison des mots de passe', err);
+                    res.status(500).send('Erreur de serveur');
+                } else if (result) {
+                    res.status(200).send({ message: 'Authentification réussie', company: user.entreprise, username: user.nom });
+                } else {
+                    res.status(422).send('Mot de passe incorrect');
+                }
+            });
+        }
+    })
+    .catch((err) => {
+        console.error('Erreur lors de la recherche de l\'utilisateur', err);
+        res.status(500).send('Erreur de serveur');
+    });
+});
+
+// Code generation
 app.post('/api/codeGenerator', (req, res) => {
     const random = require('random-string-generator');
     const numServer = req.body.numServer;

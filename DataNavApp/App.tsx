@@ -5,8 +5,11 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {setUpdateIntervalForType, SensorTypes} from 'react-native-sensors';
 
+//TODO: Handle the return button to control it depending on the page
+
 if (Platform.OS === 'android') {
   setUpdateIntervalForType(SensorTypes.accelerometer, 100);
+  setUpdateIntervalForType(SensorTypes.gyroscope, 100);
 }
 
 const Stack = createNativeStackNavigator();
