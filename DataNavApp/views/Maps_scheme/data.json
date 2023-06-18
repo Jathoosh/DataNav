@@ -1,0 +1,27 @@
+[
+    {
+      "path": "M116.50,457.50 L116.50,60.50",
+      "fill": "none",
+      "stroke": "rgb(0, 0, 0)",
+      "strokeWidth": "5.00",
+      "strokeOpacity": "1.00",
+      "strokeLinejoin": "round"
+    },
+    {
+      "path": "M116.11,60.56 L214.44,60.00",
+      "fill": "none",
+      "stroke": "rgb(0, 0, 0)",
+      "strokeWidth": "5.00",
+      "strokeOpacity": "1.00",
+      "strokeLinejoin": "round"
+    },
+    {
+      "path": "M214.50,60.50 L214.50,85.50",
+      "fill": "none",
+      "stroke": "rgb(0, 0, 0)",
+      "strokeWidth": "5.00",
+      "strokeOpacity": "1.00",
+      "strokeLinejoin": "round"
+    }
+  ]
+  
