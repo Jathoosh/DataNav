@@ -22,6 +22,8 @@ public class CodeReader : MonoBehaviour
     private string strLastResult;
     [SerializeField]
     private bool init = false;
+    
+    public bool bScan = false;
     private float lastProcessingTime;
 
     private Texture2D t2dSource;
@@ -54,7 +56,7 @@ public class CodeReader : MonoBehaviour
 
     private void OnCameraFrameReceived(ARCameraFrameEventArgs eventArgs)
     {
-        if (Time.time - lastProcessingTime < 0.2f)
+        if (Time.time - lastProcessingTime < 0.2f || !bScan)
         {
             return;
         }
