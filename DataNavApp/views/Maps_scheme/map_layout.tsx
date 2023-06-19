@@ -1,18 +1,18 @@
 import React from 'react';
 import {Svg, Path} from 'react-native-svg';
+import jsonData from './data.json';
 
-function SvgComponent({jsonData}) {
+function SvgComponent() {
   return (
     <Svg width="100%" height="100%">
-      {jsonData.map((item, index) => (
+      {jsonData.paths.map(item => (
         <Path
-          key={index}
+          key={item.id}
           d={item.path}
           fill={item.fill}
           stroke={item.stroke}
           strokeWidth={item.strokeWidth}
           strokeOpacity={item.strokeOpacity}
-          strokeLinejoin={item.strokeLinejoin}
         />
       ))}
     </Svg>

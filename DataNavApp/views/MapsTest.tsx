@@ -1,12 +1,11 @@
 import React from 'react';
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import SvgComponent from './Maps_scheme/map_layout';
 
-import SvgComponent from './Maps_scheme/scheme_1';
-
-function MapsTest(navigation) {
+function MapsTest(navigation: any) {
   return (
     <View style={styles.container}>
-      <SvgComponent jsonData={jsonData} />
+      <SvgComponent />
     </View>
   );
 }
@@ -16,7 +15,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    transform: [{rotate: '180deg'}],
+    transform: [{rotate: '0deg'}],
   },
 });
 
