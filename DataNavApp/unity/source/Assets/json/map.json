@@ -1,0 +1,72 @@
+{
+    "paths": [
+      {
+        "id": 0,
+        "path": "M116 457h121",
+        "fill": "none",
+        "stroke": "#000",
+        "strokeWidth": "5.00",
+        "strokeOpacity": "1.00",
+        "strokeLinejoin": "round"
+      },
+      {
+        "id": 1,
+        "path": "M237 457V63",
+        "fill": "none",
+        "stroke": "red",
+        "strokeWidth": "5.00",
+        "strokeOpacity": "1.00",
+        "strokeLinejoin": "round"
+      },
+      {
+        "id": 2,
+        "path": "M237 83H116",
+        "fill": "none",
+        "stroke": "#0F0",
+        "strokeWidth": "5.00",
+        "strokeOpacity": "1.00",
+        "strokeLinejoin": "round"
+      },
+      {
+        "id": 3,
+        "path": "M237 63h84",
+        "fill": "none",
+        "stroke": "#F0F",
+        "strokeWidth": "5.00",
+        "strokeOpacity": "1.00",
+        "strokeLinejoin": "round"
+      },
+      {
+        "id": 4,
+        "path": "M116 83v374",
+        "fill": "none",
+        "stroke": "#00F",
+        "strokeWidth": "5.00",
+        "strokeOpacity": "1.00",
+        "strokeLinejoin": "round"
+      },
+      {
+        "id": 5,
+        "path": "M116 290h121",
+        "fill": "none",
+        "stroke": "#0FF",
+        "strokeWidth": "5.00",
+        "strokeOpacity": "1.00",
+        "strokeLinejoin": "round"
+      }
+    ],
+    "intersections": [
+      {"id": 0, "x": 0, "y": 0},
+      {"id": 1, "x": 0, "y": 5},
+      {"id": 2, "x": 7, "y": 5},
+      {"id": 3, "x": 7, "y": -2}
+    ],
+    "racklist": [
+      {"id": 0, "name": "Rack 1", "location": "Path 1"},
+      {"id": 1, "name": "Rack 2", "location": "Path 2"},
+      {"id": 2, "name": "Rack 3", "location": "Path 3"},
+      {"id": 3, "name": "Rack 4", "location": "Path 4"},
+      {"id": 4, "name": "Rack 5", "location": "Path 5"}
+    ]
+  }
+  
