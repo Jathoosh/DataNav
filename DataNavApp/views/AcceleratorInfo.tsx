@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Text, View, Platform, StyleSheet} from 'react-native';
+import {Button, Text, View, StyleSheet} from 'react-native';
 import {Subscription} from 'rxjs';
 import {accelerometer, gyroscope} from 'react-native-sensors';
 
@@ -12,6 +12,7 @@ function AcceleratorInfos({navigation}) {
   const [gyroscopeData, setGyroscopeData] = React.useState({x: 0, y: 0, z: 0});
   // TODO : remove if statement at the end of SPRINT 3
   //if (Platform.OS === 'android') {
+  //TODO: add the BackHandler to go back to the login screen, as it is in Login.tsx
   React.useEffect(() => {
     let subscriptionAccel: Subscription | null = null;
     let subscriptionGyro: Subscription | null = null;

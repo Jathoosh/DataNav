@@ -12,7 +12,15 @@ if (Platform.OS === 'android') {
   setUpdateIntervalForType(SensorTypes.gyroscope, 100);
 }
 
-const Stack = createNativeStackNavigator();
+type RootStackParamList = {
+  Home: undefined;
+  Accelerator: undefined;
+  Maps: {serverInfos: string; serverN: string};
+  Login: undefined;
+  MapsTest: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App(): React.JSX.Element {
   return (
@@ -35,6 +43,7 @@ function App(): React.JSX.Element {
           name="Maps"
           component={require('./views/MapsInfo').default}
           options={{headerShown: false}}
+          initialParams={{serverInfos: '', serverN: ''}}
         />
         <Stack.Screen
           name="Login"
