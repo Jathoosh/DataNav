@@ -37,6 +37,16 @@ local.properties
 *.keystore
 !debug.keystore
 
+# Android Studio
+android/.tmp
+android/caches
+android/daemon
+android/kotlin-profile
+android/native
+android/wrapper
+android.lock
+android/android/FakeDependency.jar
+
 # node.js
 #
 node_modules/
