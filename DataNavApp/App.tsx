@@ -38,6 +38,11 @@ function App(): React.JSX.Element {
           component={require('./views/Login').default}
           options={{headerShown: false}}
         />
+        <Stack.Screen
+          name="MapsTest"
+          component={require('./views/MapsTest').default}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

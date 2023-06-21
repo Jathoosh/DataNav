@@ -41,6 +41,14 @@ function HomeScreen({navigation}) {
             marginTop: 20,
           }}
         />
+        <NavigationButton
+          text="Go to generate map "
+          onPress={() => navigation.navigate('MapsTest')}
+          style={{
+            marginVertical: 10,
+            marginTop: 20,
+          }}
+        />
       </View>
     </View>
   );
