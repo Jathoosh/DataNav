@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const {Sequelize, QueryTypes} = require('sequelize');
+const bcrypt=require('bcrypt');
 const app = express();
 
 const tokens = [];

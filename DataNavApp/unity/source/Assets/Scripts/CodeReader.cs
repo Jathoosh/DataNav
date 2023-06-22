@@ -13,8 +13,6 @@ public class CodeReader : MonoBehaviour
     [SerializeField]
     private ARSession session;
     [SerializeField]
-    private ARSessionOrigin sessionOrigin;
-    [SerializeField]
     private ARCameraManager cameraManager;
     [SerializeField]
     private TextMeshProUGUI TMPresultText;
@@ -24,6 +22,8 @@ public class CodeReader : MonoBehaviour
     private string strLastResult;
     [SerializeField]
     private bool init = false;
+    
+    public bool bScan = false;
     private float lastProcessingTime;
 
     private Texture2D t2dSource;
@@ -38,7 +38,6 @@ public class CodeReader : MonoBehaviour
             PossibleFormats = new List<BarcodeFormat>
             {
                 BarcodeFormat.QR_CODE
-                //BarcodeFormat.DATA_MATRIX
             }
         }
     };
@@ -57,7 +56,7 @@ public class CodeReader : MonoBehaviour
 
     private void OnCameraFrameReceived(ARCameraFrameEventArgs eventArgs)
     {
-        if (Time.time - lastProcessingTime < 0.2f)
+        if (Time.time - lastProcessingTime < 0.2f || !bScan)
         {
             return;
         }
@@ -113,22 +112,6 @@ public class CodeReader : MonoBehaviour
         t2dSource.Apply();
 
         buffer.Dispose();
-        /*
-        Texture2D t2dGrayScaled = new Texture2D(t2dSource.width, t2dSource.height, TextureFormat.RGBA32, false);
-
-        Color[] sourcePixels = t2dSource.GetPixels();
-
-        Color[] destPixels = new Color[sourcePixels.Length];
-
-        for (int i = 0; i < sourcePixels.Length; i++)
-        {
-            float gray = 0.299f * sourcePixels[i].r + 0.587f * sourcePixels[i].g + 0.114f * sourcePixels[i].b;
-            destPixels[i] = new Color(gray, gray, gray, sourcePixels[i].a);
-        }
-
-        t2dGrayScaled.SetPixels(destPixels);
-        t2dGrayScaled.Apply();
-        */
 
         // Detect and decode the barcode inside the bitmap
         result = barcodeReader.Decode(t2dSource.GetPixels32(), t2dSource.width, t2dSource.height);

@@ -42,11 +42,20 @@ function HomeScreen({navigation}) {
           }}
         />
         <NavigationButton
+
           text={"Let's crash the application"}
           onPress={() => navigation.navigate('UnityPage')}
           style={{
             marginVertical: 10,
             marginTop: 0,
+          }}
+        />
+        <NavigationButton
+          text="Go to generate map "
+          onPress={() => navigation.navigate('MapsTest')}
+          style={{
+            marginVertical: 10,
+            marginTop: 20,
           }}
         />
       </View>

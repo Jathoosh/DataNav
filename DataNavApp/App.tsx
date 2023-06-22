@@ -42,6 +42,11 @@ function App(): React.JSX.Element {
           options={{headerShown: false}}
         />
         <Stack.Screen
+          name="MapsTest"
+          component={require('./views/MapsTest').default}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
           name="UnityPage"
           component={require('./views/UnityPage').default}
           options={{headerShown: false}}
