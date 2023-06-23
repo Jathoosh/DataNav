@@ -73,7 +73,7 @@ public class CodeReader : MonoBehaviour
 
         if (!init)
         {
-            //cameraManager.subsystem.currentConfiguration = cameraManager.GetConfigurations(Allocator.Temp)[2]; //0=640*480, 1= 1280*720, 2=1920*1080
+            cameraManager.subsystem.currentConfiguration = cameraManager.GetConfigurations(Allocator.Temp)[0]; //0=640*480, 1= 1280*720, 2=1920*1080
             init = true;
         }
 
