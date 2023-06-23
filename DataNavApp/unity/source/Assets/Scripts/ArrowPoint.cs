@@ -11,14 +11,7 @@ public class Intersection
     public float y;
 }
 
-public class Rack
-{
-    public int id;
-    public string name;
-    public Location location;
-    public int OnPath;
-}
-
+[System.Serializable]
 public class Location
 {
     public float x;
@@ -26,12 +19,45 @@ public class Location
 }
 
 [System.Serializable]
+public class Rack
+{
+    public int id;
+    public string name;
+    public Location location;
+    public int onPath;
+}
+
+[System.Serializable]
+public class Path
+{
+    public int id;
+    public string path;
+    public string fill;
+    public string stroke;
+    public string strokeWidth;
+    public string strokeOpacity;
+    public string strokeLinejoin;
+}
+
+[System.Serializable]
+public class Marker
+{
+    public int id;
+    public int intersection;
+    public Location location;
+    public Location rotation;
+}
+
+[System.Serializable]
 public class RootObject
 {
+    public List<Path> paths;
     public List<Intersection> intersections;
     public List<int> path;
     public List<Rack> racklist;
+    public List<Marker> markers;
 }
+
 
 public class ArrowPoint : MonoBehaviour
 {
@@ -40,9 +66,10 @@ public class ArrowPoint : MonoBehaviour
 
     public GameObject rackPrefab; //defined in the inspector
     public GameObject redArrow; //defined in the inspector
-    private GameObject[] checkpoints; 
 
+    private GameObject[] checkpoints; 
     private GameObject[] racks;
+
     public float distanceFrommainCamera = 1.0f;
     [SerializeField]
     private TextMeshProUGUI TMPresultText; //defined in the inspector
@@ -53,9 +80,9 @@ public class ArrowPoint : MonoBehaviour
     private TextAsset jsonMap; //defined in the inspector
     [SerializeField]
     private TextAsset jsonPath; //defined in the inspector
+
     private int[] path;
 
-    private int[] racklist;
     public float fVectorDotLimit = 0.5f; //defined in the inspector
     public GameObject LeftArrow; //defined in the inspector
     public GameObject RightArrow; //defined in the inspector
@@ -90,7 +117,7 @@ public class ArrowPoint : MonoBehaviour
             }
 
             /* initialisation of the racks */
-            /*
+            
             racks = new GameObject[rootObject.racklist.Count];
 
             for (int i = 0; i < rootObject.racklist.Count; i++)
@@ -103,7 +130,7 @@ public class ArrowPoint : MonoBehaviour
 
                 racks[i].SetActive(false);
             }
-            */
+            
 
             /* initialisation of the shortest path */
 
@@ -112,6 +139,7 @@ public class ArrowPoint : MonoBehaviour
             for (int i = 0; i < rootObjectPath.path.Count; i++)
             {
                 path[i] = rootObjectPath.path[i];
+                TMPresultText.text = TMPresultText.text + "\n" + path[i];
             }
 
             
@@ -159,7 +187,6 @@ public class ArrowPoint : MonoBehaviour
                     redArrow.SetActive(false);
                     LeftArrow.SetActive(false);
                     RightArrow.SetActive(false);
-                    TMPresultText.text = "looking at the checkpoint";
                 }
                 else // Not directly looking at the checkpoint
                 {
@@ -177,7 +204,6 @@ public class ArrowPoint : MonoBehaviour
                     }
 
                     redArrow.SetActive(true);
-                    TMPresultText.text = "not looking at the checkpoint";
                 }
             }
             else
@@ -201,7 +227,6 @@ public class ArrowPoint : MonoBehaviour
                 }
 
                 redArrow.SetActive(true);
-                TMPresultText.text = "not looking at the checkpoint";
             }
 
 

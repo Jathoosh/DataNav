@@ -77,6 +77,10 @@
         {"id": 12, "name": "Rack 13", "location": {"x": 200, "y": 290}, "onPath": 5},
         {"id": 13, "name": "Rack 14", "location": {"x": 237, "y": 250}, "onPath": 1},
         {"id": 14, "name": "Rack 15", "location": {"x": 237, "y": 150}, "onPath": 1}
+    ],
+    "markers":[
+        {"id": 0, "intersection": 0, "location": {"x": 0, "y": 0}, "rotation": {"x": 0, "y": 0}}
     ]
+    
   }
   
