@@ -2,3 +2,4 @@ node_modules
 public
 !client/public
 package-lock.json
+.env
