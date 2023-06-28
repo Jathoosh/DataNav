@@ -76,28 +76,27 @@ function HomeScreen({navigation}: Props) {
           }}
         />
         <NavigationButton
-          text={'Go to Accelator Infos'}
+          text={'Accelator Infos'}
           onPress={() => navigation.navigate('Accelerator')}
           style={{
             marginVertical: 10,
-            marginTop: 20,
+            marginTop: 30,
           }}
         />
         <NavigationButton
-
-          text={"Let's crash the application"}
+          text={'Unity Integration'}
           onPress={() => navigation.navigate('UnityPage')}
           style={{
             marginVertical: 10,
-            marginTop: 0,
+            marginTop: 5,
           }}
         />
         <NavigationButton
-          text="Go to generate map "
+          text={'Maps Infos'}
           onPress={() => navigation.navigate('MapsTest')}
           style={{
             marginVertical: 10,
-            marginTop: 20,
+            marginTop: 5,
           }}
         />
       </View>
