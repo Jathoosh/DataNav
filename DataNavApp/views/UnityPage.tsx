@@ -1,8 +1,34 @@
 import React, {useRef, useEffect} from 'react';
-import {PermissionsAndroid, Platform, View} from 'react-native';
+import {BackHandler, PermissionsAndroid, Platform, View} from 'react-native';
 import UnityView from '@azesmway/react-native-unity';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-function UnityPage({navigation}) {
+type RootStackParamList = {
+  Home: undefined;
+  Accelerator: undefined;
+  Maps: {serverInfos: string; serverN: string};
+  Login: undefined;
+  MapsTest: undefined;
+  UnityPage: undefined;
+};
+
+type Props = NativeStackScreenProps<RootStackParamList, 'UnityPage'>;
+
+function UnityPage({navigation}: Props) {
+  useEffect(() => {
+    const backAction = () => {
+      navigation.navigate('Login');
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  });
+
   const unityRef = useRef<UnityView>(null);
 
   if (Platform.OS === 'android') {

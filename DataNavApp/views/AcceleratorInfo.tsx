@@ -2,8 +2,20 @@ import React from 'react';
 import {Button, Text, View, StyleSheet} from 'react-native';
 import {Subscription} from 'rxjs';
 import {accelerometer, gyroscope} from 'react-native-sensors';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-function AcceleratorInfos({navigation}) {
+type RootStackParamList = {
+  Home: undefined;
+  Accelerator: undefined;
+  Maps: {serverInfos: string; serverN: string};
+  Login: undefined;
+  MapsTest: undefined;
+  UnityPage: undefined;
+};
+
+type Props = NativeStackScreenProps<RootStackParamList, 'Accelerator'>;
+
+function AcceleratorInfos({navigation}: Props) {
   const [accelerometerData, setAccelerometerData] = React.useState({
     x: 0,
     y: 0,

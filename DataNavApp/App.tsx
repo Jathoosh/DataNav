@@ -18,6 +18,7 @@ type RootStackParamList = {
   Maps: {serverInfos: string; serverN: string};
   Login: undefined;
   MapsTest: undefined;
+  UnityPage: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
