@@ -1,5 +1,5 @@
-import React from 'react';
-import {Button, Text, View, StyleSheet} from 'react-native';
+import React, { useEffect } from 'react';
+import {Button, Text, View, StyleSheet, BackHandler} from 'react-native';
 import {Subscription} from 'rxjs';
 import {accelerometer, gyroscope} from 'react-native-sensors';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -16,6 +16,20 @@ type RootStackParamList = {
 type Props = NativeStackScreenProps<RootStackParamList, 'Accelerator'>;
 
 function AcceleratorInfos({navigation}: Props) {
+  useEffect(() => {
+    const backAction = () => {
+      navigation.navigate('Home');
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  });
+
   const [accelerometerData, setAccelerometerData] = React.useState({
     x: 0,
     y: 0,

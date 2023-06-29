@@ -40,7 +40,7 @@ function MapsInfo({navigation, route}: Props) {
 
     return () => backHandler.remove();
   });
-
+  // TODO: Remplacer l'action du bouton "Mode Plan" par l'affichage de la vue "MapsTest" et l'action du bouton "Mode RA" par l'affichage de la vue "UnityPage"
   return (
     <View style={styles.container}>
       <ImageBackground

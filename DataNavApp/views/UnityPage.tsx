@@ -2,6 +2,9 @@ import React, {useRef, useEffect} from 'react';
 import {BackHandler, PermissionsAndroid, Platform, View} from 'react-native';
 import UnityView from '@azesmway/react-native-unity';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import mapJson from './Maps_scheme/data.json';
+
+//TODO: retreive the list containing the path (nodes and racks) once it has been calculated
 
 type RootStackParamList = {
   Home: undefined;
@@ -49,12 +52,14 @@ function UnityPage({navigation}: Props) {
     console.log('Camera permission not asked for iOS'); //TODO: Update this pour IOS
   }
 
+  const mapText = JSON.stringify(mapJson);
+
   useEffect(() => {
     if (unityRef?.current) {
       const message = {
-        gameObject: 'gameObject',
-        methodName: 'methodName',
-        message: 'message',
+        gameObject: 'arrow', //TODO: Changer le nom du gameObject si nécessaire
+        methodName: 'loadMap',
+        message: mapText,
       };
       unityRef.current.postMessage(
         message.gameObject,
@@ -62,7 +67,7 @@ function UnityPage({navigation}: Props) {
         message.message,
       );
     }
-  }, []);
+  }, [mapText]); //TODO: Peut ne pas être mapText mais la liste des nodes et rack
 
   return (
     <View style={{flex: 1}}>

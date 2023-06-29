@@ -37,7 +37,7 @@ function HomeScreen({navigation}: Props) {
         },
         {text: 'YES', onPress: () => BackHandler.exitApp()},
       ]);
-      navigation.navigate('Login');
+
       return true;
     };
 

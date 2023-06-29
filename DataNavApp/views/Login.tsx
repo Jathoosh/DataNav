@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   Image,
   Dimensions,
   Platform,
+  BackHandler,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import NavigationButton from '../components/NavigationButton';
@@ -34,6 +35,20 @@ function Login({navigation}: Props) {
     setServerInfos('');
     setCode('');
   };*/
+
+  useEffect(() => {
+    const backAction = () => {
+      navigation.navigate('Home');
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  });
 
   const handleNavigateToMaps = () => {
     if (serverInfos && code) {
