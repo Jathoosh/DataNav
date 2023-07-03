@@ -10,7 +10,7 @@ type Road = {
   direction: String;
   start_node: Number;
   end_node: Number;
-  length_road: Number;
+  length: Number;
 };
 
 type Intersection = {
@@ -25,39 +25,44 @@ type JSONMap = {
   intersections: Intersection[];
 };
 
-
 const jsonMap: JSONMap = jsonData as unknown as JSONMap;
-const startNode: Intersection["id"] = 6;
+const startNode: Intersection['id'] = 6;
 
 // Fonction pour récupérer le graphe pour l'algorithme de Dijkstra
 
-
-
 // FONCTION DE TEST DE LA MAP
 function MapsTest(navigation: any) {
-  const getGraphInfo = function(startNode: Intersection["id"], jsonMap: JSONMap) {
+  const getGraphInfo = function (
+    startNode: Intersection['id'],
+    jsonMap: JSONMap,
+  ) {
     const roads = jsonMap.roads;
     const intersections = jsonMap.intersections;
     const graph = [];
-  
+
     //Parcours des intersections
-    for (const intersection of intersections){
+    for (const intersection of intersections) {
       const nodeID = intersection.id;
       const roadIDS = intersection.roads;
-  
+
       graph.push(nodeID);
 
       // Parcours de chaque chemin (tuples)
-      graph.push(roadIDS.map((id) => {
-        return [id, roads.filter((road) => {
-          return road.id == id;
-        }).length_road];
-      }))
+      graph.push(
+        roadIDS.map(id => {
+          return [
+            id,
+            roads.filter(road => {
+              return road.id === id;
+            })[0].length,
+          ];
+        }),
+      );
     }
-  
+
     return graph;
-  }
-  
+  };
+
   // Jeu de test
   const graph = getGraphInfo(startNode, jsonMap);
   console.log(graph);

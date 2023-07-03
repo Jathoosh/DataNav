@@ -5,61 +5,61 @@
       "direction":"h",
       "start_node":0,
       "end_node":4,
-      "length_road":121
+      "length":121
     },
     {
       "id":1,
       "direction":"h",
       "start_node":1,
       "end_node":5,
-      "length_road":121
+      "length":121
     },
     {
       "id":2,
       "direction":"h",
       "start_node":2,
       "end_node":6,
-      "length_road":121
+      "length":121
     },
     {
       "id":3,
       "direction":"v",
       "start_node":0,
       "end_node":1,
-      "length_road":207
+      "length":207
     },
     {
       "id":4,
       "direction":"v",
       "start_node":1,
       "end_node":2,
-      "length_road":167
+      "length":167
     },
     {
       "id":5,
       "direction":"v",
       "start_node":5,
       "end_node":6,
-      "length_road":167
+      "length":167
     },
     {
       "id":6,
       "direction":"v",
       "start_node":4,
       "end_node":5,
-      "length_road":207
+      "length":207
     },
     {
       "id":7,
       "direction":"v",
       "start_node":3,
       "end_node":4,
-      "length_road":20
+      "length":20
     }
   ],
   "comments" : [
     "intersections is nodes, roads is costs (for syl)",
-    "M{start_node.x} {start_node.y}{direction}{length_road.toPixels()} (for nat)"
+    "M{start_node.x} {start_node.y}{direction}{length.toPixels()} (for nat)"
   ],
   "intersections": [
     {"id": 0, "x": 116, "y": 83, "roads": [0, 3]},
