@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
-import {Button, Text, View, StyleSheet, BackHandler} from 'react-native';
-import {Subscription} from 'rxjs';
-import {accelerometer, gyroscope} from 'react-native-sensors';
+import React, {useEffect} from 'react';
+import {Text, View} from 'react-native';
+import {accelerometer} from 'react-native-sensors';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {Subscription} from 'rxjs';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 type RootStackParamList = {
   Home: undefined;
@@ -16,95 +17,117 @@ type RootStackParamList = {
 type Props = NativeStackScreenProps<RootStackParamList, 'Accelerator'>;
 
 function AcceleratorInfos({navigation}: Props) {
-  useEffect(() => {
-    const backAction = () => {
-      navigation.navigate('Home');
-      return true;
-    };
+  // let gyroscopeSubscription: Subscription | undefined;
 
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
-    );
-
-    return () => backHandler.remove();
-  });
-
-  const [accelerometerData, setAccelerometerData] = React.useState({
+  const [accelerationData, setAcceleration] = React.useState({
     x: 0,
     y: 0,
     z: 0,
   });
-  const [gyroscopeData, setGyroscopeData] = React.useState({x: 0, y: 0, z: 0});
-  // TODO : remove if statement at the end of SPRINT 3
-  //if (Platform.OS === 'android') {
-  //TODO: add the BackHandler to go back to the login screen, as it is in Login.tsx
-  React.useEffect(() => {
-    let subscriptionAccel: Subscription | null = null;
-    let subscriptionGyro: Subscription | null = null;
-    if (accelerometer) {
-      subscriptionAccel = accelerometer.subscribe(({x, y, z}) => {
-        setAccelerometerData({x, y, z});
-      });
-    }
-    if (gyroscope) {
-      subscriptionGyro = gyroscope.subscribe(({x, y, z}) => {
-        setGyroscopeData({x, y, z});
-      });
-    }
+  // const [gyroscopeData, setGyroscope] = React.useState({
+  //   x: 0,
+  //   y: 0,
+  //   z: 0,
+  // });
+
+  const [velocity, setVelocity] = React.useState([0, 0, 0]);
+  const getVelocity = () => velocity;
+  const [distance, setDistance] = React.useState([0, 0, 0]);
+  const getDistance = () => distance;
+
+  useEffect(() => {
+    let accelerometerSubscription: Subscription | undefined;
+    const startTracking = () => {
+      accelerometerSubscription = accelerometer.subscribe(({x, y, z}) =>
+        setAcceleration({x, y, z}),
+      );
+
+      // gyroscopeSubscription = gyroscope.subscribe(({x, y, z}) =>
+      //   setGyroscope({x, y, z}),
+      // );
+    };
+
+    const stopTracking = () => {
+      accelerometerSubscription && accelerometerSubscription.unsubscribe();
+      // gyroscopeSubscription && gyroscopeSubscription.unsubscribe();
+    };
+
+    const alpha = 0.8;
+    let gravity = [0, 0, 0];
+    let linear_acceleration = [0, 0, 0];
+
+    const processAccelerationData = ({
+      x,
+      y,
+      z,
+    }: {
+      x: number;
+      y: number;
+      z: number;
+    }) => {
+      gravity[0] = alpha * gravity[0] + (1 - alpha) * x;
+      gravity[1] = alpha * gravity[1] + (1 - alpha) * y;
+      gravity[2] = alpha * gravity[2] + (1 - alpha) * z;
+
+      linear_acceleration[0] = x - gravity[0];
+      linear_acceleration[1] = y - gravity[1];
+      linear_acceleration[2] = z - gravity[2];
+    };
+
+    let lastTimestamp = Date.now();
+    let velocityTemp = getVelocity();
+    let distanceTemp = getDistance();
+
+    const calculateDistanceAndSpeed = (
+      acceleration: number[],
+      timestamp: number,
+    ) => {
+      let dt = (timestamp - lastTimestamp) / 1000; // in seconds
+      lastTimestamp = timestamp;
+
+      for (let i = 0; i < 3; ++i) {
+        velocityTemp[i] += acceleration[i] * dt; // v = u + at
+        distanceTemp[i] += velocityTemp[i] * dt; // s = ut + 1/2at^2 (u=0 here)
+      }
+
+      setDistance(distanceTemp);
+      setVelocity(velocityTemp);
+    };
+
+    startTracking();
+
+    // processAccelerationData({
+    //   x: accelerationData.x,
+    //   y: accelerationData.y,
+    //   z: accelerationData.z,
+    // });
+
+    calculateDistanceAndSpeed(
+      [accelerationData.x, accelerationData.y, accelerationData.z],
+      Date.now(),
+    );
 
     return () => {
-      if (subscriptionAccel) {
-        subscriptionAccel.unsubscribe();
-      }
-      if (subscriptionGyro) {
-        subscriptionGyro.unsubscribe();
-      }
+      stopTracking();
     };
-  }, []);
+  }, [accelerationData, getDistance, getVelocity]);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-      <View style={styles.accelerometer}>
-        <Text>Accelerator Infos</Text>
-        <Text>X: {accelerometerData.x.toFixed(2)}</Text>
-        <Text>Y: {accelerometerData.y.toFixed(2)}</Text>
-        <Text>Z: {accelerometerData.z.toFixed(2)}</Text>
-      </View>
-      <View style={styles.gyroscope}>
-        <Text>Gyroscope Infos</Text>
-        <Text>X: {gyroscopeData.x.toFixed(2)}</Text>
-        <Text>Y: {gyroscopeData.y.toFixed(2)}</Text>
-        <Text>Z: {gyroscopeData.z.toFixed(2)}</Text>
-      </View>
-      <Button
-        title="Go to Login"
-        onPress={() => navigation.navigate('Login')}
-      />
+    <View style={{padding: 20}}>
+      <Text>Acceleration:</Text>
+      <Text>X: {accelerationData.x}</Text>
+      <Text>Y: {accelerationData.y}</Text>
+      <Text>Z: {accelerationData.z}</Text>
+      <Text>Distance:</Text>
+      <Text>X: {distance[0]}</Text>
+      <Text>Y: {distance[1]}</Text>
+      <Text>Z: {distance[2]}</Text>
+      <Text>Speed:</Text>
+      <Text>X: {velocity[0]}</Text>
+      <Text>Y: {velocity[1]}</Text>
+      <Text>Z: {velocity[2]}</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  accelerometer: {
-    position: 'absolute',
-    fontSize: 15,
-    top: 20,
-    left: 20,
-    color: 'red',
-  },
-  gyroscope: {
-    position: 'absolute',
-    fontSize: 15,
-    top: 100,
-    left: 20,
-    color: 'green',
-  },
-});
 
 export default AcceleratorInfos;
