@@ -44,20 +44,20 @@ function MapsTest(navigation: any) {
     for (const intersection of intersections) {
       const nodeID = intersection.id;
       const roadIDS = intersection.roads;
-
-      graph.push(nodeID);
-
+      var line = []
+      line.push(nodeID);
       // Parcours de chaque chemin (tuples)
-      graph.push(
-        roadIDS.map(id => {
-          return [
-            id,
-            roads.filter(road => {
-              return road.id === id;
-            })[0].length,
-          ];
-        }),
-      );
+      
+      roadIDS.map(id => {
+        line.push([
+          id,
+          roads.filter(road => {
+            return road.id === id;
+          })[0].length,
+        ]);
+      });
+
+      graph.push(line);
     }
 
     return graph;
@@ -65,7 +65,11 @@ function MapsTest(navigation: any) {
 
   // Jeu de test
   const graph = getGraphInfo(startNode, jsonMap);
-  console.log(graph);
+  console.log("[");
+  for (const line of graph) {
+    console.log("\t",line);
+  }
+  console.log("]");
 
   return (
     <View style={styles.container}>
