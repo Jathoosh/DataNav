@@ -9,6 +9,7 @@ public class Intersection
     public int id;
     public float x;
     public float y;
+    public int[] roads;
 }
 
 [System.Serializable]
@@ -28,15 +29,13 @@ public class Rack
 }
 
 [System.Serializable]
-public class Path
+public class Road
 {
     public int id;
-    public string path;
-    public string fill;
-    public string stroke;
-    public string strokeWidth;
-    public string strokeOpacity;
-    public string strokeLinejoin;
+    public string direction;
+    public int start_node;
+    public int end_node;
+    public int length;
 }
 
 [System.Serializable]
@@ -51,7 +50,7 @@ public class Marker
 [System.Serializable]
 public class RootObject
 {
-    public List<Path> paths;
+    public List<Road> Roads;
     public List<Intersection> intersections;
     public List<int> path;
     public List<Rack> racklist;
@@ -153,6 +152,22 @@ public class ArrowPoint : MonoBehaviour
             {
                 markers[i] = rootObject.markers[i];
             }
+
+            /* coloration des checkpoints du chemin le plus court */
+            for (int i = 0; i < path.Length; i++)
+            {
+                if (i < path.Length - 1)
+                {
+                    checkpoints[path[i]].GetComponent<Renderer>().material.color = Color.blue;
+                    checkpoints[path[i]].SetActive(true);
+                }
+                else
+                {
+                    racks[path[i]].GetComponent<Renderer>().material.color = Color.blue;
+                    racks[path[i]].SetActive(true);
+                }
+            }
+
 
             
 

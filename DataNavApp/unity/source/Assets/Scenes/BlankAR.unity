@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44402242, g: 0.49316543, b: 0.5722324, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -617,7 +617,7 @@ MonoBehaviour:
   redArrow: {fileID: 1234158889}
   distanceFrommainCamera: 1
   TMPresultText: {fileID: 661977492}
-  jsonMap: {fileID: 4900000, guid: 5728485e60e901a49bb28750eb20dc57, type: 3}
+  jsonMap: {fileID: 4900000, guid: 6fcdcfe118bf2b4478cca2f67b395e04, type: 3}
   jsonPath: {fileID: 4900000, guid: e65f22f539abddf48af4d1e00fc03ca0, type: 3}
   fVectorDotLimit: 0.6
   LeftArrow: {fileID: 1770116923}
