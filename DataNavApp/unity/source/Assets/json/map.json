@@ -57,12 +57,12 @@
     ],
     "intersections": [
       {"id": 0, "x": 0, "y": 0},
-      {"id": 1, "x": 0, "y": 5},
-      {"id": 2, "x": 7, "y": 5},
+      {"id": 1, "x": 0, "y": 2},
+      {"id": 2, "x": 7, "y": 2},
       {"id": 3, "x": 7, "y": -2}
     ],
     "racklist": [
-        {"id": 0, "name": "Rack 1", "location": {"x": 0, "y": 3}, "onPath": 4},
+        {"id": 0, "name": "Rack 1", "location": {"x": 8, "y": 5}, "onPath": 4},
         {"id": 1, "name": "Rack 2", "location": {"x": 200, "y": 457}, "onPath": 0},
         {"id": 2, "name": "Rack 3", "location": {"x": 237, "y": 400}, "onPath": 1},
         {"id": 3, "name": "Rack 4", "location": {"x": 237, "y": 80}, "onPath": 1},
@@ -79,7 +79,7 @@
         {"id": 14, "name": "Rack 15", "location": {"x": 237, "y": 150}, "onPath": 1}
     ],
     "markers":[
-        {"id": 0, "intersection": 0, "location": {"x": 0, "y": 0}, "rotation": {"x": 0, "y": 0}}
+        {"id": 2, "intersection": 0, "location": {"x": 0, "y": 0}, "rotation": {"x": 0, "y": -0.55}}
     ]
     
   }

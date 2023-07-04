@@ -63,12 +63,13 @@ public class ArrowPoint : MonoBehaviour
 {
     public Transform mainCameraTransform; //defined in the inspector
     public GameObject checkpointPrefab; //defined in the inspector
-
+    public GameObject World; //defined in the inspector
     public GameObject rackPrefab; //defined in the inspector
     public GameObject redArrow; //defined in the inspector
 
     private GameObject[] checkpoints; 
     private GameObject[] racks;
+    private Marker[] markers;
 
     public float distanceFrommainCamera = 1.0f;
     [SerializeField]
@@ -86,9 +87,13 @@ public class ArrowPoint : MonoBehaviour
     public float fVectorDotLimit = 0.5f; //defined in the inspector
     public GameObject LeftArrow; //defined in the inspector
     public GameObject RightArrow; //defined in the inspector
+    public GameObject CodeReaderManager; //defined in the inspector
+
+    private CodeReader codeReaderScript;
 
     void Start()
     {
+        codeReaderScript = CodeReaderManager.GetComponent<CodeReader>();
         if (checkpointPrefab != null)
         {
             // Convert the JSON data into a list of intersections
@@ -102,7 +107,7 @@ public class ArrowPoint : MonoBehaviour
             for (int i = 0; i < rootObject.intersections.Count; i++)
             {
                 // Create a new GameObject for each intersection
-                checkpoints[i] = Instantiate(checkpointPrefab, new Vector3(rootObject.intersections[i].x, 0, rootObject.intersections[i].y), Quaternion.identity);
+                checkpoints[i] = Instantiate(checkpointPrefab, new Vector3(rootObject.intersections[i].x, 0, rootObject.intersections[i].y), Quaternion.identity, World.transform);
 
                 // Give a name to the GameObject
                 checkpoints[i].name = "Checkpoint_" + i;
@@ -122,7 +127,7 @@ public class ArrowPoint : MonoBehaviour
 
             for (int i = 0; i < rootObject.racklist.Count; i++)
             {
-                racks[i] = Instantiate(rackPrefab, new Vector3(rootObject.racklist[i].location.x, 0, rootObject.racklist[i].location.y), Quaternion.identity);
+                racks[i] = Instantiate(rackPrefab, new Vector3(rootObject.racklist[i].location.x, 0, rootObject.racklist[i].location.y), Quaternion.identity, World.transform);
                 racks[i].name = "Rack_" + i;
                 racks[i].transform.position = new Vector3(rootObject.racklist[i].location.x, 1, rootObject.racklist[i].location.y);
 
@@ -142,7 +147,13 @@ public class ArrowPoint : MonoBehaviour
                 TMPresultText.text = TMPresultText.text + "\n" + path[i];
             }
 
-            
+            /* initialisation de tous les markers*/
+            markers = new Marker[rootObject.markers.Count];
+            for (int i = 0; i < rootObject.markers.Count; i++)
+            {
+                markers[i] = rootObject.markers[i];
+            }
+
             
 
         }
@@ -243,7 +254,18 @@ public class ArrowPoint : MonoBehaviour
             {
                 // Increment the checkpoint index
                 iCurrentPath++;
-                iCurrentCheckpoint = path[iCurrentPath];
+                if (iCurrentPath == path.Length-1)
+                {
+                    //set to the rack position
+                    iCurrentCheckpoint = path[iCurrentPath];
+                    //show the rack
+                    checkpoints[iCurrentCheckpoint] = racks[iCurrentCheckpoint];
+
+                }
+                if (iCurrentPath < path.Length)
+                {
+                    iCurrentCheckpoint = path[iCurrentPath];
+                }
 
                 // If we have reached the last checkpoint, then we have reached the end of the path
                 if (iCurrentCheckpoint >= checkpoints.Length)
@@ -253,5 +275,51 @@ public class ArrowPoint : MonoBehaviour
                 }
             }
         }
+        if (codeReaderScript.bResult)
+        {
+            Marker marker = GetMarkerById(codeReaderScript.intResult);
+            if (marker == null)
+            {
+                codeReaderScript.bResult = false;
+                return;
+            }
+            /*
+            Vector3 newCameraPosition = new Vector3(marker.location.x, 1, marker.location.y);
+
+            Quaternion newCameraRotation = Quaternion.Euler(0, marker.rotation.y, 0);
+
+            Vector3 translation = newCameraPosition - mainCameraTransform.position;
+
+            // Reset the rotation of World before applying new rotation
+            World.transform.rotation = Quaternion.identity;
+
+            World.transform.position += translation;
+
+            World.transform.rotation = newCameraRotation;
+            */
+            codeReaderScript.bResult = false;
+            TMPresultText.text = TMPresultText.text + "\nMarker " + marker.id + " found" + "\nx:" + marker.location.x + " y:" + marker.location.y + " r:" + marker.rotation.y;
+            
+            TMPresultText.text = TMPresultText.text + "\nmoved to x:" + World.transform.position.x + " y:" + World.transform.position.y + " z:" + World.transform.position.z;
+            TMPresultText.text = TMPresultText.text + "\nrotation y:" + World.transform.rotation.y;
+            
+        }
     }
+
+    public Marker GetMarkerById(int id)
+    {
+        // Trouve le premier Marker dans la liste qui a l'ID spécifié
+        foreach (Marker marker in markers)
+        {
+            if (marker.id == id)
+            {
+                return marker;
+            }
+        }
+
+        // Si aucun Marker avec l'ID spécifié n'a été trouvé, renvoie null
+        return null;
+    }
+
+    
 }

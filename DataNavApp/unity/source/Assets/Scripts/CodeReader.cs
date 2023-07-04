@@ -28,7 +28,8 @@ public class CodeReader : MonoBehaviour
 
     private Texture2D t2dSource;
     private Texture2D t2dGrayScaled;
-
+    public int intResult = 0;
+    public bool bResult = false;
     private IBarcodeReader barcodeReader = new BarcodeReader
     {
         AutoRotate = true,
@@ -65,17 +66,19 @@ public class CodeReader : MonoBehaviour
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
 
+        if (!init)
+        {
+            cameraManager.subsystem.currentConfiguration = cameraManager.GetConfigurations(Allocator.Temp)[0]; //0=640*480, 1= 1280*720, 2=1920*1080
+            init = true;
+        }
+
         if (!cameraManager.TryAcquireLatestCpuImage(out XRCpuImage image))
         {
             TMPresultText.text = "Error TryAcquireLatestCpuImage";
             return;
         }
 
-        if (!init)
-        {
-            cameraManager.subsystem.currentConfiguration = cameraManager.GetConfigurations(Allocator.Temp)[0]; //0=640*480, 1= 1280*720, 2=1920*1080
-            init = true;
-        }
+        
 
         var conversionParams = new XRCpuImage.ConversionParams
         {
@@ -121,6 +124,9 @@ public class CodeReader : MonoBehaviour
         {
             TMPresultText.text = "result : "+ result.Text;
             Handheld.Vibrate();
+            intResult = int.Parse(result.Text);
+            bScan = false;
+            bResult = true;
         }
     }
 }
