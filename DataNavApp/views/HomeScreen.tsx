@@ -1,10 +1,53 @@
-import {View, StyleSheet, Image, useColorScheme, Text} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Image,
+  useColorScheme,
+  Text,
+  BackHandler,
+  Alert,
+} from 'react-native';
 import NavigationButton from '../components/NavigationButton';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useEffect} from 'react';
 
-function HomeScreen({navigation}) {
+type RootStackParamList = {
+  Home: undefined;
+  Accelerator: undefined;
+  Maps: {serverInfos: string; serverN: string};
+  Login: undefined;
+  MapsTest: undefined;
+  UnityPage: undefined;
+};
+
+type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
+
+function HomeScreen({navigation}: Props) {
   const colorScheme = useColorScheme();
   //const logoStyle = colorScheme === 'dark' ? {tintColor: 'white'} : null;
   //const logoDatanavStyle = colorScheme === 'dark' ? {tintColor: 'white'} : null;
+  //TODO: add the BackHandler to go back to the login screen, as it is in Login.tsx
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert('Hold on!', 'Are you sure you want to go back?', [
+        {
+          text: 'Cancel',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {text: 'YES', onPress: () => BackHandler.exitApp()},
+      ]);
+
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  });
 
   return (
     <View style={styles.container}>
@@ -34,28 +77,27 @@ function HomeScreen({navigation}) {
           }}
         />
         <NavigationButton
-          text={'Go to Accelator Infos'}
+          text={'Accelator Infos'}
           onPress={() => navigation.navigate('Accelerator')}
           style={{
             marginVertical: 10,
-            marginTop: 20,
+            marginTop: 30,
           }}
         />
         <NavigationButton
-
-          text={"Let's crash the application"}
+          text={'Unity Integration'}
           onPress={() => navigation.navigate('UnityPage')}
           style={{
             marginVertical: 10,
-            marginTop: 0,
+            marginTop: 5,
           }}
         />
         <NavigationButton
-          text="Go to generate map "
+          text={'Maps Infos'}
           onPress={() => navigation.navigate('MapsTest')}
           style={{
             marginVertical: 10,
-            marginTop: 20,
+            marginTop: 5,
           }}
         />
       </View>

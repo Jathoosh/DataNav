@@ -1,8 +1,37 @@
 import React, {useRef, useEffect} from 'react';
-import {PermissionsAndroid, Platform, View} from 'react-native';
+import {BackHandler, PermissionsAndroid, Platform, View} from 'react-native';
 import UnityView from '@azesmway/react-native-unity';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import mapJson from './Maps_scheme/data.json';
 
-function UnityPage({navigation}) {
+//TODO: retreive the list containing the path (nodes and racks) once it has been calculated
+
+type RootStackParamList = {
+  Home: undefined;
+  Accelerator: undefined;
+  Maps: {serverInfos: string; serverN: string};
+  Login: undefined;
+  MapsTest: undefined;
+  UnityPage: undefined;
+};
+
+type Props = NativeStackScreenProps<RootStackParamList, 'UnityPage'>;
+
+function UnityPage({navigation}: Props) {
+  useEffect(() => {
+    const backAction = () => {
+      navigation.navigate('Login');
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  });
+
   const unityRef = useRef<UnityView>(null);
 
   if (Platform.OS === 'android') {
@@ -23,12 +52,14 @@ function UnityPage({navigation}) {
     console.log('Camera permission not asked for iOS'); //TODO: Update this pour IOS
   }
 
+  const mapText = JSON.stringify(mapJson);
+
   useEffect(() => {
     if (unityRef?.current) {
       const message = {
-        gameObject: 'gameObject',
-        methodName: 'methodName',
-        message: 'message',
+        gameObject: 'arrow', //TODO: Changer le nom du gameObject si nécessaire
+        methodName: 'loadMap',
+        message: mapText,
       };
       unityRef.current.postMessage(
         message.gameObject,
@@ -36,7 +67,7 @@ function UnityPage({navigation}) {
         message.message,
       );
     }
-  }, []);
+  }, [mapText]); //TODO: Peut ne pas être mapText mais la liste des nodes et rack
 
   return (
     <View style={{flex: 1}}>

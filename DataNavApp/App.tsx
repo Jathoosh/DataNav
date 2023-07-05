@@ -12,9 +12,28 @@ if (Platform.OS === 'android') {
   setUpdateIntervalForType(SensorTypes.gyroscope, 100);
 }
 
-const Stack = createNativeStackNavigator();
+type RootStackParamList = {
+  Home: undefined;
+  Accelerator: undefined;
+  Maps: {serverInfos: string; serverN: string};
+  Login: undefined;
+  MapsTest: undefined;
+  UnityPage: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App(): React.JSX.Element {
+  if (__DEV__) {
+    // Code to execute only in development mode
+    console.log('This is a development build');
+    // Add your development-specific code here
+  } else {
+    // Code to execute in production mode
+    console.log('This is a production build');
+    // Add your production-specific code here
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -35,6 +54,7 @@ function App(): React.JSX.Element {
           name="Maps"
           component={require('./views/MapsInfo').default}
           options={{headerShown: false}}
+          initialParams={{serverInfos: '', serverN: ''}}
         />
         <Stack.Screen
           name="Login"
