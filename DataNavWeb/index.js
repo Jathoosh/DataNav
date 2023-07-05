@@ -1,11 +1,19 @@
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const {Sequelize, QueryTypes} = require('sequelize');
 const bcrypt=require('bcrypt');
 const app = express();
 
+const allowedOrigin = 'https://myawsbucketmasterproject.s3.eu-west-3.amazonaws.com';
+
+const corsOptions = {
+    origin: allowedOrigin
+};
+
 const tokens = [];
 
+app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: false }));
 
 require('dotenv').config();
