@@ -1,8 +1,9 @@
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {BackHandler, StyleSheet, View} from 'react-native';
 import SvgComponent from './Maps_scheme/map_layout';
 import jsonData from './Maps_scheme/data2.json';
 import {Svg, Path} from 'react-native-svg';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 // CALCULATE THE SHORTEST PATH
 // Definition des types de la Map
@@ -26,13 +27,38 @@ type JSONMap = {
   intersections: Intersection[];
 };
 
+type RootStackParamList = {
+  Home: undefined;
+  Accelerator: undefined;
+  Maps: {serverInfos: string; code: string} | undefined;
+  Login: undefined;
+  MapsTest: undefined;
+};
+
+type Props = NativeStackScreenProps<RootStackParamList, 'MapsTest'>;
+
 const jsonMap: JSONMap = jsonData as unknown as JSONMap;
 const startNode: Intersection['id'] = 6;
 
 // Fonction pour récupérer le graphe pour l'algorithme de Dijkstra
 
 // FONCTION DE TEST DE LA MAP
-function MapsTest(navigation: any) {
+function MapsTest(navigation: Props) {
+  
+  useEffect(() => {
+    const backAction = () => {
+      navigation.navigate('Login');
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  });
+  
   const getGraphInfo = function (
     startNode: Intersection['id'],
     jsonMap: JSONMap,

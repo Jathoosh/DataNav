@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -7,11 +7,23 @@ import {
   Image,
   Dimensions,
   Platform,
+  BackHandler,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import NavigationButton from '../components/NavigationButton';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-function Login({navigation}) {
+type RootStackParamList = {
+  Home: undefined;
+  Accelerator: undefined;
+  Maps: {serverInfos: string; serverN: string};
+  Login: undefined;
+  MapsTest: undefined;
+};
+
+type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
+
+function Login({navigation}: Props) {
   /*TODO:
     - modify binding fields to match the serverInfos and code (backend)
   */
@@ -19,14 +31,28 @@ function Login({navigation}) {
   const [code, setCode] = useState('');
 
   //TODO: Voir si nécessaire par la suite
-  /*const clearInput = () => { 
+  /*const clearInput = () => {
     setServerInfos('');
     setCode('');
   };*/
 
+  useEffect(() => {
+    const backAction = () => {
+      navigation.navigate('Home');
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  });
+
   const handleNavigateToMaps = () => {
     if (serverInfos && code) {
-      navigation.navigate('Maps', {serverInfos, code});
+      navigation.navigate('Maps', {serverInfos: serverInfos, serverN: code});
     } else {
       console.log('Veuillez remplir les champs');
     }
@@ -62,13 +88,13 @@ function Login({navigation}) {
           <TextInput
             style={styles.inputInfos}
             value={code}
-            onChangeText={code => setCode(code)}
+            onChangeText={textCode => setCode(textCode)}
           />
         </View>
         {/* TODO: A supprimer lorsque la récup baie et serveur sera faite via le backend (sprint 4) */}
         {/* <NavigationButton text={'Accéder'} onPress={consoleLog} /> */}
 
-        {/* TODO: récupérer info serveur et baie via requète au backend 
+        {/* TODO: récupérer info serveur et baie via requète au backend
         Pour le moment j'ai récupéré les infos du serveur et le code transmis au composant MapsInfo
         qui affichera seulement serverInfos pour la baie et un nombre choisi est attribué au serveur
       */}

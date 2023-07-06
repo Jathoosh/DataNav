@@ -1,6 +1,11 @@
 export default async function codeGenerator(data) {
+    require('dotenv').config();
+    const baseURL = process.env.BASE_URL;
     const axios = require('axios');
-    return await axios.post('/api/codeGenerator', data, {
+    const axiosInstance = axios.create({
+        baseURL: baseURL
+    });
+    return await axiosInstance.post('/api/codeGenerator', data, {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         }

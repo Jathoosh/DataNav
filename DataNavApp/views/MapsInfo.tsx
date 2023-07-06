@@ -1,20 +1,46 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   ImageBackground,
+  BackHandler,
 } from 'react-native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+
+type RootStackParamList = {
+  Home: undefined;
+  Accelerator: undefined;
+  Maps: {serverInfos: string; serverN: string};
+  Login: undefined;
+  MapsTest: undefined;
+};
+
+type Props = NativeStackScreenProps<RootStackParamList, 'Maps'>;
 
 // TODO : A changer par les valeurs qui seront récupérées de la page de login (niv backend)
-function MapsInfo({route}) {
-  const {serverInfos, serveur = '50'} = route.params;
+function MapsInfo({navigation, route}: Props) {
+  const {serverInfos, serverN = '50'} = route.params;
 
   // TODO : A changer par l'image de la carte qui sera générée
   const backgroundImagePath = require('../asset/map_background.png');
   const [selectedButton, setSelectedButton] = useState('Mode Plan');
 
+  useEffect(() => {
+    const backAction = () => {
+      navigation.navigate('Login');
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  });
+  // TODO: Remplacer l'action du bouton "Mode Plan" par l'affichage de la vue "MapsTest" et l'action du bouton "Mode RA" par l'affichage de la vue "UnityPage"
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -24,7 +50,7 @@ function MapsInfo({route}) {
           <View style={styles.infoContainer}>
             <View style={styles.posRectangle}>
               <Text style={styles.infoBaie}>
-                Baie : {serverInfos} - Serveur : {serveur}
+                Baie : {serverInfos} - Serveur : {serverN}
               </Text>
             </View>
           </View>
