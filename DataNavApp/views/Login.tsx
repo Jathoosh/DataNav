@@ -12,6 +12,7 @@ import {
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import NavigationButton from '../components/NavigationButton';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import axios, {AxiosResponse, HttpStatusCode} from 'axios';
 
 type RootStackParamList = {
   Home: undefined;
@@ -24,6 +25,7 @@ type RootStackParamList = {
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 function Login({navigation}: Props) {
+  var isTokenInvalid = false;
   /*TODO:
     - modify binding fields to match the serverInfos and code (backend)
   */
@@ -50,12 +52,35 @@ function Login({navigation}: Props) {
     return () => backHandler.remove();
   });
 
-  const handleNavigateToMaps = () => {
+  const handleNavigateToMaps = async () => {
     if (serverInfos && code) {
-      navigation.navigate('Maps', {serverInfos: serverInfos, serverN: code});
+      const res: any = await tokenValidation(code);
+      if (res !== null && res.status === 200) {
+        navigation.navigate('Maps', {
+          serverInfos: serverInfos,
+          serverN: res.data.numServeur,
+        });
+      } else {
+        isTokenInvalid = true;
+      }
     } else {
       console.log('Veuillez remplir les champs');
     }
+  };
+
+  const tokenValidation = async (tokenInput: String) => {
+    return axios
+      .get('http://localhost:3000/api/tokenvalidation/' + tokenInput)
+      .then(response => {
+        if (response.status === 200) {
+          return response;
+        } else {
+          return null;
+        }
+      })
+      .catch(() => {
+        return null;
+      });
   };
 
   return (
@@ -72,6 +97,9 @@ function Login({navigation}: Props) {
             style={styles.logo_datanav}
           />
         </View>
+        {isTokenInvalid ? (
+          <Text style={styles.erreur}>Code invalide</Text>
+        ) : null}
         <View style={styles.inputContainer}>
           <Text style={styles.infos}>
             Entrez les informations de votre
@@ -157,6 +185,12 @@ const styles = StyleSheet.create({
     width: '80%',
     marginTop: '20%',
     marginBottom: '20%',
+  },
+  erreur: {
+    color: 'red',
+    fontSize: 20,
+    textAlign: 'center',
+    marginTop: Dimensions.get('window').height * 0.02,
   },
 });
 

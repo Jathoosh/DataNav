@@ -1,133 +1,82 @@
-import React, {useEffect} from 'react';
-import {Text, View} from 'react-native';
-import {accelerometer} from 'react-native-sensors';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Subscription} from 'rxjs';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import React, {useEffect, useState} from 'react';
+import {View, StyleSheet, Text, Animated} from 'react-native';
+import {gyroscope, accelerometer} from 'react-native-sensors';
 
-type RootStackParamList = {
-  Home: undefined;
-  Accelerator: undefined;
-  Maps: {serverInfos: string; serverN: string};
-  Login: undefined;
-  MapsTest: undefined;
-  UnityPage: undefined;
-};
-
-type Props = NativeStackScreenProps<RootStackParamList, 'Accelerator'>;
-
-function AcceleratorInfos({navigation}: Props) {
-  // let gyroscopeSubscription: Subscription | undefined;
-
-  const [accelerationData, setAcceleration] = React.useState({
-    x: 0,
-    y: 0,
-    z: 0,
+const AcceleratorInfo = () => {
+  const [motionData, setMotionData] = useState({
+    gyroscope: {x: 0, y: 0, z: 0},
+    accelerometer: {x: 0, y: 0, z: 0},
+    direction: 'Stationary',
   });
-  // const [gyroscopeData, setGyroscope] = React.useState({
-  //   x: 0,
-  //   y: 0,
-  //   z: 0,
-  // });
-
-  const [velocity, setVelocity] = React.useState([0, 0, 0]);
-  const getVelocity = () => velocity;
-  const [distance, setDistance] = React.useState([0, 0, 0]);
-  const getDistance = () => distance;
 
   useEffect(() => {
-    let accelerometerSubscription: Subscription | undefined;
-    const startTracking = () => {
-      accelerometerSubscription = accelerometer.subscribe(({x, y, z}) =>
-        setAcceleration({x, y, z}),
-      );
+    const gyroscopeSubscription = gyroscope.subscribe(({x, y, z}) => {
+      // Update the gyroscope data in the state
+      setMotionData(prevData => ({
+        ...prevData,
+        gyroscope: {x, y, z},
+      }));
+    });
 
-      // gyroscopeSubscription = gyroscope.subscribe(({x, y, z}) =>
-      //   setGyroscope({x, y, z}),
-      // );
-    };
+    // Subscribe to the accelerometer data
+    const accelerometerSubscription = accelerometer.subscribe(({x, y, z}) => {
+      // Update the accelerometer data in the state
+      setMotionData(prevData => ({
+        ...prevData,
+        accelerometer: {x, y, z},
+      }));
 
-    const stopTracking = () => {
-      accelerometerSubscription && accelerometerSubscription.unsubscribe();
-      // gyroscopeSubscription && gyroscopeSubscription.unsubscribe();
-    };
+      // Detect user movement direction
+      const {x: ax, y: ay} = motionData.accelerometer;
+      let direction = 'Stationary';
 
-    const alpha = 0.8;
-    let gravity = [0, 0, 0];
-    let linear_acceleration = [0, 0, 0];
-
-    const processAccelerationData = ({
-      x,
-      y,
-      z,
-    }: {
-      x: number;
-      y: number;
-      z: number;
-    }) => {
-      gravity[0] = alpha * gravity[0] + (1 - alpha) * x;
-      gravity[1] = alpha * gravity[1] + (1 - alpha) * y;
-      gravity[2] = alpha * gravity[2] + (1 - alpha) * z;
-
-      linear_acceleration[0] = x - gravity[0];
-      linear_acceleration[1] = y - gravity[1];
-      linear_acceleration[2] = z - gravity[2];
-    };
-
-    let lastTimestamp = Date.now();
-    let velocityTemp = getVelocity();
-    let distanceTemp = getDistance();
-
-    const calculateDistanceAndSpeed = (
-      acceleration: number[],
-      timestamp: number,
-    ) => {
-      let dt = (timestamp - lastTimestamp) / 1000; // in seconds
-      lastTimestamp = timestamp;
-
-      for (let i = 0; i < 3; ++i) {
-        velocityTemp[i] += acceleration[i] * dt; // v = u + at
-        distanceTemp[i] += velocityTemp[i] * dt; // s = ut + 1/2at^2 (u=0 here)
+      if (ax > 0.2) {
+        direction = 'Moving Forward';
+      } else if (ax < -0.2) {
+        direction = 'Moving Backward';
+      } else if (ay > 0.2) {
+        direction = 'Moving Right';
+      } else if (ay < -0.2) {
+        direction = 'Moving Left';
       }
 
-      setDistance(distanceTemp);
-      setVelocity(velocityTemp);
-    };
+      // Update the direction in the state
+      setMotionData(prevData => ({
+        ...prevData,
+        direction,
+      }));
+    });
 
-    startTracking();
-
-    // processAccelerationData({
-    //   x: accelerationData.x,
-    //   y: accelerationData.y,
-    //   z: accelerationData.z,
-    // });
-
-    calculateDistanceAndSpeed(
-      [accelerationData.x, accelerationData.y, accelerationData.z],
-      Date.now(),
-    );
-
+    // Clean up the subscriptions when the component unmounts
     return () => {
-      stopTracking();
+      gyroscopeSubscription.unsubscribe();
+      accelerometerSubscription.unsubscribe();
     };
-  }, [accelerationData, getDistance, getVelocity]);
+  });
+
+  // You can use the motionData to update your view and render the movements here
+  // For example, you can use the gyroscope and accelerometer values to animate a shape or update the position of an element in the view
+  // You can also display the direction information in your view
 
   return (
-    <View style={{padding: 20}}>
-      <Text>Acceleration:</Text>
-      <Text>X: {accelerationData.x}</Text>
-      <Text>Y: {accelerationData.y}</Text>
-      <Text>Z: {accelerationData.z}</Text>
-      <Text>Distance:</Text>
-      <Text>X: {distance[0]}</Text>
-      <Text>Y: {distance[1]}</Text>
-      <Text>Z: {distance[2]}</Text>
-      <Text>Speed:</Text>
-      <Text>X: {velocity[0]}</Text>
-      <Text>Y: {velocity[1]}</Text>
-      <Text>Z: {velocity[2]}</Text>
+    <View style={styles.container}>
+      {/* Render your view elements here */}
+      <Animated.View
+        style={{transform: [{translateX: motionData.gyroscope.x}]}}
+      />
+
+      {/* Display the direction information */}
+      <Text>Direction: {motionData.direction}</Text>
     </View>
   );
-}
+};
 
-export default AcceleratorInfos;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+export default AcceleratorInfo;

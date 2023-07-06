@@ -110,6 +110,25 @@ app.post('/api/codeGenerator', (req, res) => {
     res.status(200).send({token:token});
 });
 
+// Token verification
+app.get('/api/tokenvalidation/:token', (req, res) => {
+    const token = req.params.token;
+
+    sequelize.query("SELECT * FROM Token WHERE code = :code", {
+        replacements: {code: token},
+        type: QueryTypes.SELECT
+    }).then((results) => {
+        if(results.length === 0) {
+            res.status(422).send({message: 'Code invalide'});
+        } else {
+            res.status(200).send({message: 'Code valide', numServer: results[0].numServeur, serverRoute: results[0].serverRoute});
+        }
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send({error: err});
+    });
+});
+
 app.listen(port, () => {
  console.log(`App listening on ${host}:${port}`);
 });
