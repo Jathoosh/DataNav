@@ -35,25 +35,32 @@ function SvgComponent() {
     return interY === undefined ? 0 : interY.y;
   };
 
+  const shortestPath = [6, 2, 1]; // Chemin le plus court à afficher
+
   return (
     <Svg width="100%" height="100%">
-      {jsonData.roads.map(item => (
-        <Path
-          key={item.id}
-          d={
-            'M' +
-            getX(item.start_node, jsonMap) +
-            ' ' +
-            getY(item.start_node, jsonMap) +
-            item.direction +
-            item.length
-          }
-          fill="none"
-          stroke="#000"
-          strokeWidth="5.00"
-          strokeOpacity="1.00"
-        />
-      ))}
+      {jsonData.roads.map(item => {
+        const isShortestPath = shortestPath.includes(item.start_node) && shortestPath.includes(item.end_node);
+        const strokeColor = isShortestPath ? '#FF0000' : '#000';
+
+        return (
+          <Path
+            key={item.id}
+            d={
+              'M' +
+              getX(item.start_node, jsonMap) +
+              ' ' +
+              getY(item.start_node, jsonMap) +
+              item.direction +
+              item.length
+            }
+            fill="none"
+            stroke={strokeColor}
+            strokeWidth="5.00"
+            strokeOpacity="1.00"
+          />
+        );
+      })}
     </Svg>
   );
 }
