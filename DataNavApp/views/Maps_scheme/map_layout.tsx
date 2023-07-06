@@ -40,7 +40,9 @@ function SvgComponent() {
   return (
     <Svg width="100%" height="100%">
       {jsonData.roads.map(item => {
-        const isShortestPath = shortestPath.includes(item.start_node) && shortestPath.includes(item.end_node);
+        const isShortestPath =
+          shortestPath.includes(item.start_node) &&
+          shortestPath.includes(item.end_node);
         const strokeColor = isShortestPath ? '#FF0000' : '#000';
 
         return (

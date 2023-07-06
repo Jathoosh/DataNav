@@ -10,6 +10,7 @@ import {
 import NavigationButton from '../components/NavigationButton';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useEffect} from 'react';
+import React from 'react';
 
 type RootStackParamList = {
   Home: undefined;
@@ -123,4 +124,5 @@ const styles = StyleSheet.create({
     height: 45,
   },
 });
+
 export default HomeScreen;

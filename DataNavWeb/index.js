@@ -1,15 +1,8 @@
 const express = require('express');
-const cors = require('cors');
 const bodyParser = require('body-parser');
 const {Sequelize, QueryTypes} = require('sequelize');
 const bcrypt=require('bcrypt');
 const app = express();
-
-const allowedOrigin = 'https://myawsbucketmasterproject.s3.eu-west-3.amazonaws.com';
-
-const corsOptions = {
-    origin: allowedOrigin
-};
 
 const tokens = [];
 
@@ -108,6 +101,33 @@ app.post('/api/codeGenerator', (req, res) => {
     }, 300000);
 
     res.status(200).send({token:token});
+});
+
+// Token verification
+app.get('/api/tokenvalidation/:token', (req, res) => {
+    const token = req.params.token;
+
+    sequelize.query("SELECT * FROM Token WHERE code = :code", {
+        replacements: {code: token},
+        type: QueryTypes.SELECT
+    }).then((results) => {
+        if(results.length === 0) {
+            res.status(422).send({message: 'Code invalide'});
+        } else {
+            sequelize.query("DELETE FROM Token WHERE code = :code", {
+                replacements: {code: token},
+                type: QueryTypes.DELETE
+            }).then(() => {
+                tokens.splice(tokens.indexOf(token), 1);
+            }).catch((err) => {
+                console.log(err);
+            });
+            res.status(200).send({message: 'Code valide', numServer: results[0].numServeur, serverRoute: results[0].serverRoute});
+        }
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send({error: err});
+    });
 });
 
 app.listen(port, () => {
