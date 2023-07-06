@@ -12,7 +12,7 @@ import {
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import NavigationButton from '../components/NavigationButton';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import axios, {AxiosResponse, HttpStatusCode} from 'axios';
+import axios from 'axios';
 
 type RootStackParamList = {
   Home: undefined;

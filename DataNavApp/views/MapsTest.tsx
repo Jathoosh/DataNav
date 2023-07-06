@@ -2,7 +2,6 @@ import React, {useEffect} from 'react';
 import {BackHandler, StyleSheet, View} from 'react-native';
 import SvgComponent from './Maps_scheme/map_layout';
 import jsonData from './Maps_scheme/data2.json';
-import {Svg, Path} from 'react-native-svg';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 // CALCULATE THE SHORTEST PATH
@@ -44,7 +43,6 @@ const startNode: Intersection['id'] = 6;
 
 // FONCTION DE TEST DE LA MAP
 function MapsTest(navigation: Props) {
-  
   useEffect(() => {
     const backAction = () => {
       navigation.navigate('Login');
@@ -58,7 +56,7 @@ function MapsTest(navigation: Props) {
 
     return () => backHandler.remove();
   });
-  
+
   const getGraphInfo = function (
     startNode: Intersection['id'],
     jsonMap: JSONMap,
@@ -71,10 +69,10 @@ function MapsTest(navigation: Props) {
     for (const intersection of intersections) {
       const nodeID = intersection.id;
       const roadIDS = intersection.roads;
-      var line = []
+      var line = [];
       line.push(nodeID);
       // Parcours de chaque chemin (tuples)
-      
+
       roadIDS.map(id => {
         line.push([
           id,
@@ -92,11 +90,11 @@ function MapsTest(navigation: Props) {
 
   // Jeu de test
   const graph = getGraphInfo(startNode, jsonMap);
-  console.log("[");
+  console.log('[');
   for (const line of graph) {
-    console.log("\t",line);
+    console.log('\t', line);
   }
-  console.log("]");
+  console.log(']');
 
   return (
     <View style={styles.container}>
@@ -177,8 +175,7 @@ const shortestPath = dijkstra(graph, startNode);
 console.log("Shortest Path:", shortestPath);
 */
 
-const shortestPath: number[] = [6,2,5,1,4,3,0];
-
+const shortestPath: number[] = [6, 2, 5, 1, 4, 3, 0];
 
 // STYLE
 const styles = StyleSheet.create({
