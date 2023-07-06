@@ -89,10 +89,22 @@ public class ArrowPoint : MonoBehaviour
     public GameObject CodeReaderManager; //defined in the inspector
 
     private CodeReader codeReaderScript;
+    private bool bLoadedMap = false;
+
+    public float fPixeltoMeter = 0.075f; //defined in the inspector
 
     void Start()
     {
         codeReaderScript = CodeReaderManager.GetComponent<CodeReader>();
+        //hide left and right and red arrows
+        loadMap("");
+        LeftArrow.SetActive(false);
+        RightArrow.SetActive(false);
+        redArrow.SetActive(false);
+    }
+
+    void loadMap(string message)
+    {
         if (checkpointPrefab != null)
         {
             // Convert the JSON data into a list of intersections
@@ -106,13 +118,13 @@ public class ArrowPoint : MonoBehaviour
             for (int i = 0; i < rootObject.intersections.Count; i++)
             {
                 // Create a new GameObject for each intersection
-                checkpoints[i] = Instantiate(checkpointPrefab, new Vector3(rootObject.intersections[i].x, 0, rootObject.intersections[i].y), Quaternion.identity, World.transform);
+                checkpoints[i] = Instantiate(checkpointPrefab, new Vector3((int)(rootObject.intersections[i].x * fPixeltoMeter), 0, (int)(rootObject.intersections[i].y * fPixeltoMeter)), Quaternion.identity, World.transform);
 
                 // Give a name to the GameObject
                 checkpoints[i].name = "Checkpoint_" + i;
 
                 // Position the GameObject using the x and y coordinates of the intersection
-                checkpoints[i].transform.position = new Vector3(rootObject.intersections[i].x, 1, rootObject.intersections[i].y);
+                checkpoints[i].transform.position = new Vector3((int)(rootObject.intersections[i].x * fPixeltoMeter), 1, (int)(rootObject.intersections[i].y * fPixeltoMeter));
 
                 TMPresultText.text = TMPresultText.text + "\n" + checkpoints[i].name + " : " + checkpoints[i].transform.position.x.ToString("F2") + " " + checkpoints[i].transform.position.z.ToString("F2");
 
@@ -126,9 +138,9 @@ public class ArrowPoint : MonoBehaviour
 
             for (int i = 0; i < rootObject.racklist.Count; i++)
             {
-                racks[i] = Instantiate(rackPrefab, new Vector3(rootObject.racklist[i].location.x, 0, rootObject.racklist[i].location.y), Quaternion.identity, World.transform);
+                racks[i] = Instantiate(rackPrefab, new Vector3((int)(rootObject.racklist[i].location.x * fPixeltoMeter), 0, (int)(rootObject.racklist[i].location.y * fPixeltoMeter)), Quaternion.identity, World.transform);
                 racks[i].name = "Rack_" + i;
-                racks[i].transform.position = new Vector3(rootObject.racklist[i].location.x, 1, rootObject.racklist[i].location.y);
+                racks[i].transform.position = new Vector3((int)(rootObject.racklist[i].location.x * fPixeltoMeter), 1, (int)(rootObject.racklist[i].location.y * fPixeltoMeter));
 
                 TMPresultText.text = TMPresultText.text + "\n" + racks[i].name + " : " + racks[i].transform.position.x.ToString("F2") + " " + racks[i].transform.position.z.ToString("F2");
 
@@ -166,22 +178,15 @@ public class ArrowPoint : MonoBehaviour
                     racks[path[i]].GetComponent<Renderer>().material.color = Color.blue;
                     racks[path[i]].SetActive(true);
                 }
-            }
-
-
-            
-
+            }  
+            bLoadedMap = true;
         }
-        //hide left and right and red arrows
-        LeftArrow.SetActive(false);
-        RightArrow.SetActive(false);
-        redArrow.SetActive(false);
     }
 
     void Update()
     {
         // Ensure we have both mainCamera and checkpoint before proceeding
-        if (mainCameraTransform != null && checkpoints[iCurrentCheckpoint] != null)
+        if (mainCameraTransform != null && checkpoints[iCurrentCheckpoint] != null && bLoadedMap == true)
         {
             // Calculate direction to the checkpoint
             Vector3 directionToCheckpoint = (checkpoints[iCurrentCheckpoint].transform.position - mainCameraTransform.position).normalized;
@@ -289,36 +294,36 @@ public class ArrowPoint : MonoBehaviour
                     iCurrentCheckpoint = 0;
                 }
             }
-        }
-        if (codeReaderScript.bResult)
-        {
-            Marker marker = GetMarkerById(codeReaderScript.intResult);
-            if (marker == null)
+            if (codeReaderScript.bResult)
             {
+                Marker marker = GetMarkerById(codeReaderScript.intResult);
+                if (marker == null)
+                {
+                    codeReaderScript.bResult = false;
+                    return;
+                }
+                /*
+                Vector3 newCameraPosition = new Vector3(marker.location.x, 1, marker.location.y);
+
+                Quaternion newCameraRotation = Quaternion.Euler(0, marker.rotation.y, 0);
+
+                Vector3 translation = newCameraPosition - mainCameraTransform.position;
+
+                // Reset the rotation of World before applying new rotation
+                World.transform.rotation = Quaternion.identity;
+
+                World.transform.position += translation;
+
+                World.transform.rotation = newCameraRotation;
+                */
                 codeReaderScript.bResult = false;
-                return;
+                TMPresultText.text = TMPresultText.text + "\nMarker " + marker.id + " found" + "\nx:" + marker.location.x + " y:" + marker.location.y + " r:" + marker.rotation.y;
+                
+                TMPresultText.text = TMPresultText.text + "\nmoved to x:" + World.transform.position.x + " y:" + World.transform.position.y + " z:" + World.transform.position.z;
+                TMPresultText.text = TMPresultText.text + "\nrotation y:" + World.transform.rotation.y;
+                
             }
-            /*
-            Vector3 newCameraPosition = new Vector3(marker.location.x, 1, marker.location.y);
-
-            Quaternion newCameraRotation = Quaternion.Euler(0, marker.rotation.y, 0);
-
-            Vector3 translation = newCameraPosition - mainCameraTransform.position;
-
-            // Reset the rotation of World before applying new rotation
-            World.transform.rotation = Quaternion.identity;
-
-            World.transform.position += translation;
-
-            World.transform.rotation = newCameraRotation;
-            */
-            codeReaderScript.bResult = false;
-            TMPresultText.text = TMPresultText.text + "\nMarker " + marker.id + " found" + "\nx:" + marker.location.x + " y:" + marker.location.y + " r:" + marker.rotation.y;
-            
-            TMPresultText.text = TMPresultText.text + "\nmoved to x:" + World.transform.position.x + " y:" + World.transform.position.y + " z:" + World.transform.position.z;
-            TMPresultText.text = TMPresultText.text + "\nrotation y:" + World.transform.rotation.y;
-            
-        }
+        }  
     }
 
     public Marker GetMarkerById(int id)
