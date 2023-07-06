@@ -1,61 +1,66 @@
-import React from 'react';
-import {Svg, Path} from 'react-native-svg';
-import jsonData from './data2.json';
+import React, {useEffect} from 'react';
+import {Text, View} from 'react-native';
+import {accelerometer, gyroscope} from 'react-native-sensors';
+import {Subscription} from 'rxjs';
+import Pointeur from '../../components/Pointeur';
 
-type Road = {
-  id: Number;
-  direction: String;
-  start_node: Number;
-  end_node: Number;
-  length: Number;
-};
+function AcceleratorInfos() {
+  const [accelerationData, setAcceleration] = React.useState({
+    x: 0,
+    y: 0,
+    z: 0,
+  });
+  const [gyroscopeData, setGyroscope] = React.useState({
+    x: 0,
+    y: 0,
+    z: 0,
+  });
+  const [pointerPosition, setPointerPosition] = React.useState({x: 0, y: 0});
 
-type Intersection = {
-  id: Number;
-  x: Number;
-  y: Number;
-  roads: Number[];
-};
+  useEffect(() => {
+    let accelerometerSubscription: Subscription | undefined;
+    let gyroscopeSubscription: Subscription | undefined;
 
-type JSONMap = {
-  roads: Road[];
-  intersections: Intersection[];
-};
+    const startTracking = () => {
+      accelerometerSubscription = accelerometer.subscribe(({x, y, z}) => {
+        setAcceleration({x, y, z});
+        // Mise à jour de la position du pointeur en fonction de l'accélération
+        setPointerPosition(prevPosition => ({
+          x: prevPosition.x - x,
+          y: prevPosition.y + y,
+        }));
+      });
 
-function SvgComponent() {
-  const jsonMap: JSONMap = jsonData as unknown as JSONMap;
+      gyroscopeSubscription = gyroscope.subscribe(({x, y, z}) => {
+        setGyroscope({x, y, z});
+      });
+    };
 
-  const getX = (id: Number, json_inter: JSONMap) => {
-    const interX = json_inter.intersections.find((item: any) => item.id === id);
-    return interX === undefined ? 0 : interX.x;
-  };
+    const stopTracking = () => {
+      accelerometerSubscription && accelerometerSubscription.unsubscribe();
+      gyroscopeSubscription && gyroscopeSubscription.unsubscribe();
+    };
 
-  const getY = (id: Number, json_inter: JSONMap) => {
-    const interY = json_inter.intersections.find((item: any) => item.id === id);
-    return interY === undefined ? 0 : interY.y;
-  };
+    startTracking();
+
+    return () => {
+      stopTracking();
+    };
+  }, []);
 
   return (
-    <Svg width="100%" height="100%">
-      {jsonData.roads.map(item => (
-        <Path
-          key={item.id}
-          d={
-            'M' +
-            getX(item.start_node, jsonMap) +
-            ' ' +
-            getY(item.start_node, jsonMap) +
-            item.direction +
-            item.length
-          }
-          fill="none"
-          stroke="#000"
-          strokeWidth="5.00"
-          strokeOpacity="1.00"
-        />
-      ))}
-    </Svg>
+    <View style={{padding: 20}}>
+      <Pointeur x={pointerPosition.x} y={pointerPosition.y} />
+      <Text>Acceleration:</Text>
+      <Text>X: {accelerationData.x}</Text>
+      <Text>Y: {accelerationData.y}</Text>
+      <Text>Z: {accelerationData.z}</Text>
+      <Text>Gyroscope:</Text>
+      <Text>X: {gyroscopeData.x}</Text>
+      <Text>Y: {gyroscopeData.y}</Text>
+      <Text>Z: {gyroscopeData.z}</Text>
+    </View>
   );
 }
 
-export default SvgComponent;
+export default AcceleratorInfos;

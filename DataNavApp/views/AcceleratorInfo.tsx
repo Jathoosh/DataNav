@@ -1,73 +1,52 @@
-import React from 'react';
-import {Button, Text, View, Platform, StyleSheet} from 'react-native';
-import {Subscription} from 'rxjs';
+import React, {useEffect} from 'react';
+import {Text, View} from 'react-native';
 import {accelerometer} from 'react-native-sensors';
+import {Subscription} from 'rxjs';
+import Pointeur from '../components/Pointeur';
 
-function AcceleratorInfos({navigation}) {
-  const [accelerometerData, setData] = React.useState({x: 0, y: 0, z: 0});
-  // TODO : remove if statement at the end of SPRINT 3
-  //if (Platform.OS === 'android') {
-  React.useEffect(() => {
-    let subscription: Subscription | null = null;
-    if (accelerometer) {
-      subscription = accelerometer.subscribe(({x, y, z}) => {
-        setData({x, y, z});
+function AcceleratorInfos() {
+  const [accelerationData, setAcceleration] = React.useState({
+    x: 0,
+    y: 0,
+    z: 0,
+  });
+  const [pointerPosition, setPointerPosition] = React.useState({x: 0, y: 0});
+
+  useEffect(() => {
+    let accelerometerSubscription: Subscription | undefined;
+
+    const startTracking = () => {
+      accelerometerSubscription = accelerometer.subscribe(({x, y, z}) => {
+        // Inverser les sens de mouvement pour le pointeur
+        setPointerPosition(prevPosition => ({
+          x: prevPosition.x - x, // Inverser le mouvement gauche-droite
+          y: prevPosition.y + y, // Conserver le mouvement haut-bas
+        }));
+
+        setAcceleration({x, y, z});
       });
-    }
+    };
+
+    const stopTracking = () => {
+      accelerometerSubscription && accelerometerSubscription.unsubscribe();
+    };
+
+    startTracking();
 
     return () => {
-      if (subscription) {
-        subscription.unsubscribe();
-      }
+      stopTracking();
     };
   }, []);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-      <Text style={styles.textX}>X: {accelerometerData.x.toFixed(2)}</Text>
-      <Text style={styles.textY}>Y: {accelerometerData.y.toFixed(2)}</Text>
-      <Text style={styles.textZ}>Z: {accelerometerData.z.toFixed(2)}</Text>
-      <Button
-        title="Go to Login"
-        onPress={() => navigation.navigate('Login')}
-      />
+    <View style={{padding: 20}}>
+      <Pointeur x={pointerPosition.x} y={pointerPosition.y} />
+      <Text>Acceleration:</Text>
+      <Text>X: {accelerationData.x}</Text>
+      <Text>Y: {accelerationData.y}</Text>
+      <Text>Z: {accelerationData.z}</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  error: {
-    position: 'absolute',
-    fontSize: 15,
-    top: 20,
-    left: 20,
-  },
-  textX: {
-    position: 'absolute',
-    fontSize: 24,
-    top: 100,
-    left: 100,
-    color: 'red',
-  },
-  textY: {
-    position: 'absolute',
-    fontSize: 24,
-    top: 150,
-    left: 100,
-    color: 'red',
-  },
-  textZ: {
-    position: 'absolute',
-    fontSize: 24,
-    top: 200,
-    left: 100,
-    color: 'red',
-  },
-});
 
 export default AcceleratorInfos;
