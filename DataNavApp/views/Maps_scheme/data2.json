@@ -1,0 +1,90 @@
+{
+  "roads": [
+    {
+      "id":0,
+      "direction":"h",
+      "start_node":0,
+      "end_node":4,
+      "length":121
+    },
+    {
+      "id":1,
+      "direction":"h",
+      "start_node":1,
+      "end_node":5,
+      "length":121
+    },
+    {
+      "id":2,
+      "direction":"h",
+      "start_node":2,
+      "end_node":6,
+      "length":121
+    },
+    {
+      "id":3,
+      "direction":"v",
+      "start_node":0,
+      "end_node":1,
+      "length":207
+    },
+    {
+      "id":4,
+      "direction":"v",
+      "start_node":1,
+      "end_node":2,
+      "length":167
+    },
+    {
+      "id":5,
+      "direction":"v",
+      "start_node":5,
+      "end_node":6,
+      "length":167
+    },
+    {
+      "id":6,
+      "direction":"v",
+      "start_node":4,
+      "end_node":5,
+      "length":207
+    },
+    {
+      "id":7,
+      "direction":"v",
+      "start_node":3,
+      "end_node":4,
+      "length":20
+    }
+  ],
+  "comments" : [
+    "intersections is nodes, roads is costs (for syl)",
+    "M{start_node.x} {start_node.y}{direction}{length.toPixels()} (for nat)"
+  ],
+  "intersections": [
+    {"id": 0, "x": 116, "y": 83, "roads": [0, 3]},
+    {"id": 1, "x": 116, "y": 290, "roads": [1, 4]},
+    {"id": 2, "x": 116, "y": 457, "roads": [2, 4]},
+    {"id": 3, "x": 237, "y": 63, "roads": [7]},
+    {"id": 4, "x": 237, "y": 83, "roads": [0, 7]},
+    {"id": 5, "x": 237, "y": 290, "roads": [1, 5]},
+    {"id": 6, "x": 237, "y": 457, "roads": [2, 5]}
+  ],
+  "racklist": [
+    {"id": 0, "name": "Rack 1", "location": {"x": 116, "y": 300}, "onPath": 4},
+    {"id": 1, "name": "Rack 2", "location": {"x": 200, "y": 457}, "onPath": 0},
+    {"id": 2, "name": "Rack 3", "location": {"x": 237, "y": 400}, "onPath": 1},
+    {"id": 3, "name": "Rack 4", "location": {"x": 237, "y": 80}, "onPath": 1},
+    {"id": 4, "name": "Rack 5", "location": {"x": 150, "y": 457}, "onPath": 0},
+    {"id": 5, "name": "Rack 6", "location": {"x": 180, "y": 290}, "onPath": 5},
+    {"id": 6, "name": "Rack 7", "location": {"x": 237, "y": 100}, "onPath": 1},
+    {"id": 7, "name": "Rack 8", "location": {"x": 320, "y": 63}, "onPath": 3},
+    {"id": 8, "name": "Rack 9", "location": {"x": 150, "y": 290}, "onPath": 5},
+    {"id": 9, "name": "Rack 10", "location": {"x": 237, "y": 200}, "onPath": 1},
+    {"id": 10, "name": "Rack 11", "location": {"x": 116, "y": 200}, "onPath": 4},
+    {"id": 11, "name": "Rack 12", "location": {"x": 160, "y": 457}, "onPath": 0},
+    {"id": 12, "name": "Rack 13", "location": {"x": 200, "y": 290}, "onPath": 5},
+    {"id": 13, "name": "Rack 14", "location": {"x": 237, "y": 250}, "onPath": 1},
+    {"id": 14, "name": "Rack 15", "location": {"x": 237, "y": 150}, "onPath": 1}
+  ]
+}
