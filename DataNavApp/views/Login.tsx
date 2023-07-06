@@ -54,15 +54,16 @@ function Login({navigation}: Props) {
 
   const handleNavigateToMaps = async () => {
     if (serverInfos && code) {
-      const res: any = await tokenValidation(code);
-      if (res !== null && res.status === 200) {
-        navigation.navigate('Maps', {
-          serverInfos: serverInfos,
-          serverN: res.data.numServeur,
-        });
-      } else {
-        isTokenInvalid = true;
-      }
+      await tokenValidation(code).then(res => {
+        if (res !== null && res.status === 200) {
+          navigation.navigate('Maps', {
+            serverInfos: serverInfos,
+            serverN: res.data.numServer,
+          });
+        } else {
+          isTokenInvalid = true;
+        }
+      });
     } else {
       console.log('Veuillez remplir les champs');
     }
@@ -70,7 +71,7 @@ function Login({navigation}: Props) {
 
   const tokenValidation = async (tokenInput: String) => {
     return axios
-      .get('http://localhost:3000/api/tokenvalidation/' + tokenInput)
+      .get('http://192.168.1.50:3000/api/tokenvalidation/' + tokenInput)
       .then(response => {
         if (response.status === 200) {
           return response;

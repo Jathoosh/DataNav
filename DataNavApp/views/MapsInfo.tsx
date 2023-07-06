@@ -21,7 +21,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Maps'>;
 
 // TODO : A changer par les valeurs qui seront récupérées de la page de login (niv backend)
 function MapsInfo({navigation, route}: Props) {
-  const {serverInfos, serverN = '50'} = route.params;
+  const {serverInfos, serverN} = route.params;
 
   // TODO : A changer par l'image de la carte qui sera générée
   const backgroundImagePath = require('../asset/map_background.png');

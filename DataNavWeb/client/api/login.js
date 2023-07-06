@@ -1,5 +1,4 @@
 export default async function loginFunc(data) {
-    require('dotenv').config();
     const baseURL = process.env.BASE_URL;
     const axios = require('axios');
     const axiosInstance = axios.create({
