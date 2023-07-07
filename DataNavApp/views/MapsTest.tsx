@@ -42,7 +42,7 @@ const startNode: Intersection['id'] = 6;
 // Fonction pour récupérer le graphe pour l'algorithme de Dijkstra
 
 // FONCTION DE TEST DE LA MAP
-function MapsTest(navigation: Props) {
+function MapsTest({navigation}: Props) {
   useEffect(() => {
     const backAction = () => {
       navigation.navigate('Login');

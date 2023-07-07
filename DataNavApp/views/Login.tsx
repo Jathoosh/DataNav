@@ -71,7 +71,7 @@ function Login({navigation}: Props) {
 
   const tokenValidation = async (tokenInput: String) => {
     return axios
-      .get('http://192.168.1.50:3000/api/tokenvalidation/' + tokenInput)
+      .get('http:/INSERT:3000/api/tokenvalidation/' + tokenInput)
       .then(response => {
         if (response.status === 200) {
           return response;
